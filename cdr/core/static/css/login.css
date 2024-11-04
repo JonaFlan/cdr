@@ -1,0 +1,97 @@
+/* Contenedor principal de login */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.row {
+    max-width: 900px;
+    width: 100%;
+}
+
+/* Imagen */
+.img-fluid {
+    max-width: 80%;
+    margin: 0 auto;
+    display: block;
+}
+
+/* Título */
+h2 {
+    font-size: 2em;
+    color: #A1C181;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Formulario */
+form {
+    background-color: #0D1D13; /* Fondo oscuro */
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+input[type="text"], input[type="password"] {
+    background-color: #1A3B2A; /* Fondo de los inputs */
+    color: #C8D6C3; /* Color del texto */
+    border: 1px solid #3E6654;
+    border-radius: 8px;
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+    color: #7F9E8B;
+}
+
+input[type="checkbox"] {
+    accent-color: #A1C181; /* Color del checkbox */
+}
+
+.btn-dark-gothic {
+    background-color: #333; /* Color oscuro del botón */
+    color: #A1C181;
+    border: none;
+    font-weight: bold;
+    font-size: 1.2em;
+    padding: 10px;
+    transition: background 0.3s ease;
+}
+
+.btn-dark-gothic:hover {
+    background-color: #222;
+}
+
+.form-check-label {
+    color: #C8D6C3;
+}
+
+/* Ajustes de diseño para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .img-fluid {
+        max-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    form {
+        padding: 20px;
+    }
+}
+
+.navbar {
+    display: none;
+}

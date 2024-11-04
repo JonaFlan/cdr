@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Biblioteca{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href="{% static 'css/biblioteca.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container mt-5 p-3 container-principal">
+
+    <div class="row">
+        {% for juego in juegos %}
+            <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                <div class="card h-100 game-card">
+                    {% if juego.imagen %}
+                        <img src="{{ juego.imagen.url }}" alt="{{ juego.nombre }}" class="card-img-top img-fluid">
+                    {% else %}
+                        <img src="https://via.placeholder.com/200" alt="Imagen no disponible" class="card-img-top">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ juego.nombre }}</h5>
+                        <p class="card-text">{{ juego.get_estado_display }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

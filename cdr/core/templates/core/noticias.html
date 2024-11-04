@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+
+{% block title %}Noticias{% endblock %}
+
+{% block content %}
+<main class="container mt-5 p-3">
+
+    <ul class="list-group">
+        {% for noticia in noticias %}
+            <li class="list-group-item mb-3" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
+                <h3 style="color: #A1C181;">{{ noticia.titulo }}</h3>
+                <small class="" style="color: rgb(179, 178, 178)">{{ noticia.fecha_publicacion }}</small>
+                <p>{{ noticia.contenido }}</p>
+            </li>
+        {% empty %}
+            <li class="list-group-item text-light" style="background-color: #0D1D13; border: 1px solid #1A3B2A;">
+                No hay noticias disponibles.
+            </li>
+        {% endfor %}
+    </ul>
+</main>
+{% endblock %}

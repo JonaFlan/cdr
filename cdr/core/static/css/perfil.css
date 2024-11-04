@@ -1,0 +1,38 @@
+.profile-container {
+    background-color: #0D1D13; /* Fondo oscuro */
+    color: #C8D6C3; /* Texto claro */
+    border-radius: 15px;
+    padding: 40px;
+    max-width: 800px;
+    margin: 0 auto; /* Centrar el contenedor */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+    transition: all 0.3s ease;
+}
+
+.profile-title {
+    color: #A1C181; /* Verde claro */
+    font-size: 2.5em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-image {
+    border: 5px solid #1A3B2A; /* Borde verde oscuro */
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.profile-image:hover {
+    transform: scale(1.05); /* Agranda ligeramente la imagen al pasar el mouse */
+}
+
+.profile-info p {
+    color: #7F9E8B; /* Verde más suave */
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}

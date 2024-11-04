@@ -1,0 +1,54 @@
+.sesion-card {
+    background-color: #0D1D13; /* Fondo oscuro */
+    border: 1px solid #1A3B2A; /* Borde verde oscuro */
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #C8D6C3; /* Texto claro */
+}
+
+.sesion-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra en hover */
+}
+
+/* Imagen */
+.sesion-card img {
+    border-bottom: 1px solid #1A3B2A;
+}
+
+/* Contenido de la tarjeta */
+.sesion-card-body {
+    padding: 1rem;
+}
+
+.sesion-card-title {
+    color: #A1C181; /* Verde claro para los títulos */
+    font-size: 1.2em;
+}
+
+.sesion-card-text {
+    color: #7F9E8B; /* Verde más suave para el texto */
+    margin-bottom: 0.5rem;
+}
+
+/* Botón de inscripción */
+.btn-dark-gothic {
+    background-color: #2c2c2c;
+    color: #f8f9fa;
+    border: 2px solid #4d4d4d;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-family: 'Garamond', serif;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.btn-dark-gothic:hover {
+    background-color: #1a1a1a;
+    border-color: #f8f9fa;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}

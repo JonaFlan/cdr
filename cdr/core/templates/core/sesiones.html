@@ -1,0 +1,62 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Sesiones{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href="{% static 'css/sesiones.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container p-3 mt-5">
+    <!-- Mostrar mensajes -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <!-- Tarjetas de sesión -->
+    <div class="row">
+        {% for sesion in sesiones %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="sesion-card">
+                    <!-- Imagen del juego -->
+                    {% if sesion.juego.imagen %}
+                        <img src="{{ sesion.juego.imagen.url }}" alt="{{ sesion.juego.nombre }}" class="img-fluid w-100">
+                    {% else %}
+                        <img src="https://via.placeholder.com/200" alt="Imagen no disponible" class="img-fluid w-100">
+                    {% endif %}
+                    <!-- Detalles de la sesión -->
+                    <div class="sesion-card-body text-center">
+                        <h5 class="sesion-card-title">{{ sesion.titulo }}</h5>
+                        <p class="sesion-card-text"><strong>Juego:</strong> {{ sesion.juego.nombre }}</p>
+                        <p class="sesion-card-text"><strong>Fecha:</strong> {{ sesion.fecha }}</p>
+                        <p class="sesion-card-text">{{ sesion.descripcion }}</p>
+                        <p class="sesion-card-text"><strong>Cupos disponibles:</strong> {{ sesion.cupos_disponibles }}</p>
+                        
+                        <!-- Inscritos -->
+                        <div class="inscritos-img d-flex justify-content-center mb-2">
+                            {% for usuario in sesion.usuarios_inscritos.all %}
+                                <img src="{{ usuario.perfil.imagen.url }}" alt="{{ usuario.username }}" class="rounded-circle" height="30" width="30">
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Botones de inscripción -->
+                        {% if user in sesion.usuarios_inscritos.all %}
+                            <p class="text-success">¡Ya estás inscrito!</p>
+                            <a href="{% url 'anular_inscripcion_sesion' sesion.id %}" class="btn btn-dark-gothic btn-sm my-2">Anular inscripción</a>
+                        {% else %}
+                            <a href="{% url 'inscribirse_sesion' sesion.id %}" class="btn btn-dark-gothic btn-sm my-2">Inscribirse</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

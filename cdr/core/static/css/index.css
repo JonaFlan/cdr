@@ -1,0 +1,10 @@
+@media (min-width: 992px) {
+    .carousel-custom {
+        height:450px;
+    }
+}
+
+p {
+    color: white;
+}
+

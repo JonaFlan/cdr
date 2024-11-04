@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Cripta Del Rol | Inicio de sesión{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mb-auto" style="min-height: 100vh;">
+    <div class="row d-flex align-items-center" style="height: 100%;">
+
+        <a class="col-sm-12 col-lg-6" href="{% url 'index' %}" >
+            <img src="{% static 'img/cdr2.png' %}" alt="Logo" class="img-fluid mb-3">
+        </a>
+        <div class="col-sm-12 col-lg-6">
+            <h2>Entrada a la Cripta</h2>
+            {% if not user.is_authenticated %}
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.username.as_widget }}
+                        {{ form.username.errors }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password.as_widget }}
+                        {{ form.password.errors }}
+                    </div>
+                    <!-- <div class="form-check">
+                        {{ form.keep_logged_in.as_widget }} <label class="form-check-label" for="id_keep_logged_in">Recuérdame</label>
+                    </div> -->
+                    <button type="submit" class="btn btn-dark-gothic w-100">Iniciar sesión</button>
+                </form>
+            {% else %}
+                <p>Ya estás conectado.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href=" {% static 'css/index.css' %} ">
+{% endblock %}
+
+{% block content %}
+
+<div id="carouselExampleAutoplaying" class="carousel slide mb-3" data-bs-ride="carousel" >
+    <div class="carousel-inner carousel-custom" >
+        <div class="carousel-item active">
+            <img src="{% static 'img/img_proximamente2.png' %}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+        <img src="{% static 'img/img_proximamente2.png' %}" class="d-block w-100" alt="...">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<div class="container" >
+    <h3 class="fw-bold text-center my-3">
+        ¡Bienvenidos a La Cripta del Rol!
+    </h3>
+    <div class="row">
+        <img src="{% static 'img/img_bienvenida.webp' %}" class="img-fluid col-lg-6 col-sm-12 mb-3">
+        <p class="col-lg-6 col-sm-12 my-auto lh-base fs-5">
+            Adéntrate en las profundidades de nuestro club de juegos de mesa, donde la aventura, la estrategia y la diversión se entrelazan en un ambiente misterioso y envolvente. Aquí, entre las sombras de nuestra cripta, te invitamos a unirte a una comunidad apasionada por los juegos de rol y de mesa, donde cada partida es una nueva historia por descubrir. No importa si eres un veterano explorador de mazmorras o un valiente aventurero en tus primeras misiones, en La Cripta del Rol siempre hay un lugar para ti. ¡Únete a nosotros y desentraña los secretos de la cripta mientras haces nuevos amigos y disfrutas de épicas sesiones de juego!
+        </p>
+    </div>
+</div>
+
+
+{% endblock %}
