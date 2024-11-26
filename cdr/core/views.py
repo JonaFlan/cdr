@@ -4,6 +4,11 @@ from django.contrib import messages
 from .models import Sesion, Juego, Noticia
 # Create your views here.
 
+
+def dado(request):
+    return render(request, 'core/dado.html')  # Ajuste para la ruta dentro de 'templates/core'
+
+
 def index(request):
     print("Inicio")
     return render(request, 'core/index.html')
@@ -12,6 +17,9 @@ def biblioteca(request):
     print("Lista de juegos")
     juegos = Juego.objects.all()
     return render(request, 'core/biblioteca.html', {'juegos': juegos})
+
+def herramientas(request):
+    return render(request, 'core/herramientas.html')
 
 @login_required
 def perfil(request):

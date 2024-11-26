@@ -1,0 +1,106 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Dados{% endblock %}
+
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es" class="full-height">
+<head>
+  <meta charset="UTF-8">
+  <title>Lanzador de Dados</title>
+  <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
+  <link rel="stylesheet" href="{% static 'css/dado.css' %}">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="container-fluid h-100">
+	<div class="row h-100">
+		<div class="col-3" style="height:100vh; overflow:hidden;">
+			<div class="container px-0">
+				<div class="row mt-1">
+					<div class="col-12">
+						<h4 class="d-none d-md-block text-center">Lanzador de Dados</h1>
+					</div>
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<div class="d-flex">
+									<label class="sr-only" for="rollConfig">Ingresa la configuracion del dado</label>
+									<div class="input-group mr-2">
+										<input type="text" class="form-control flex-grow-1 flex-shrink-1" id="rollConfig" value="1d20">
+										<a href="#" id="rollHelp" class="input-group-append"><span class="input-group-text">?</span></a>
+									</div>
+									<button type="submit" class="btn btn-primary" id="throw">Lanzar</button>
+								</div>
+							</div>
+							<div class="card-body">
+								<h1 id="resultText" class="text-center mb-0">&nbsp;</h1>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mt-3">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<div class="d-flex">
+									<div class="flex-grow-1 flex-shrink-1">Dados Salvados</div>
+									<button id="toggleSave" type="submit" class="btn btn-success btn-sm"><strong>+</strong></button>
+								</div>
+							</div>
+							<div class="list-group list-group-flush">
+								<div class="list-group-item" id="saveBlock" style="display:none">
+									<div class="d-flex">
+										<label class="sr-only" for="rollConfig">Ingresa el nombre del dado</label>
+										<div class="input-group mr-2">
+											<input type="text" class="form-control flex-grow-1 flex-shrink-1 mr-2" id="rollName">
+										</div>
+										<button type="submit" class="btn btn-primary" id="saveThrow">Guardar</button>
+									</div>
+								</div>
+								<div class="list-group-item p-2">
+									<div class="list-group" id="savedRolls">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mt-3">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-header">
+								<div class="d-flex">
+									<div class="flex-grow-1 flex-shrink-1">Historial de Lanzamientos</div>
+									<button id="clearLog" type="submit" class="btn btn-secondary btn-sm">Borrar</button>
+								</div>
+							</div>
+							<div class="card-body p-2">
+								<div id="rollLog"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- <div class="row mt-1 d-none d-md-block">
+					<div class="col-12 small text-muted">
+						Adapted from <a href="http://a.teall.info/dice/">Teal Dice</a> by Anton Natarov. Utilizes <a href="https://getbootstrap.com/">Bootstrap component library</a>, <a href="https://threejs.org/">THREE rendering library</a> and <a href="http://www.cannonjs.org/">CANNON physics library</a>. Velvet background retrieved from <a href="https://www.pinterest.com/pin/137359857358954784/">Pinterest</a> (attribution unknown).
+					</div>
+				</div> -->
+			</div>
+		</div>
+		<div class="col-9 velvet-lining h-100 p-0" id="canvas">
+		</div>
+	</div>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/103/three.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js'></script>
+<script  src="{% static 'js/dado.js' %}"></script>
+
+</body>
+</html>
+
+{% endblock %}

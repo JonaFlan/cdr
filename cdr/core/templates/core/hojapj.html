@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1c1c;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .character-sheet {
+            max-width: 1000px;
+            margin: auto;
+            background-color: #2c2c2c;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .btn {
+            background-color: #d9534f;
+            border: none;
+            color: #fff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .btn:hover {
+            background-color: #c9302c;
+        }
+
+        .initiative-container {
+            background-color: #444;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            width: 80px;
+        }
+
+        .initiative-value {
+            font-size: 24px;
+        }
+
+        .stats-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .score-container {
+            text-align: center;
+            padding: 15px;
+            background-color: #444;
+            border-radius: 5px;
+            width: 100px;
+        }
+
+        .score-container span {
+            display: block;
+        }
+
+        .combat-section {
+            margin-top: 30px;
+        }
+
+        .combat-section h2 {
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        .attack-table {
+            background-color: #3c3c3c;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .attack-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+            border-bottom: 1px solid #555;
+        }
+
+        .attack-row:last-child {
+            border-bottom: none;
+        }
+
+        .proficiencies-section,
+        .senses-section {
+            margin-top: 20px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="character-sheet">
+        <!-- Header -->
+        <div class="header">
+            <h1>New Character</h1>
+            <div>
+                <button class="btn">Level Up</button>
+                <button class="btn">Inspiration</button>
+            </div>
+            <div class="initiative-container">
+                <span>Initiative</span>
+                <span class="initiative-value">+0</span>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="score-container">
+                <span>Strength</span>
+                <div class="score">10</div>
+                <span>+0</span>
+            </div>
+            <div class="score-container">
+                <span>Dexterity</span>
+                <div class="score">10</div>
+                <span>+0</span>
+            </div>
+            <div class="score-container">
+                <span>Constitution</span>
+                <div class="score">10</div>
+                <span>+0</span>
+            </div>
+            <div class="score-container">
+                <span>Intelligence</span>
+                <div class="score">10</div>
+                <span>+0</span>
+            </div>
+            <div class="score-container">
+                <span>Wisdom</span>
+                <div class="score">10</div>
+                <span>+0</span>
+            </div>
+            <div class="score-container">
+                <span>Charisma</span>
+                <div class="score">10</div>
+                <span>+0</span>
+            </div>
+        </div>
+
+        <!-- Combat Section -->
+        <div class="combat-section">
+            <h2>Combat</h2>
+            <div class="attack-table">
+                <div class="attack-row">
+                    <span>Unarmed Strike</span>
+                    <span>+0 Attack</span>
+                    <span>1 Damage</span>
+                </div>
+                <!-- Añadir más filas de ataques si es necesario -->
+            </div>
+        </div>
+
+        <!-- Proficiencies Section -->
+        <div class="proficiencies-section">
+            <div class="section-title">Proficiencies & Languages</div>
+            <p>None</p>
+        </div>
+
+        <!-- Senses Section -->
+        <div class="senses-section">
+            <div class="section-title">Senses</div>
+            <p>Passive Perception: 10</p>
+        </div>
+    </div>
+
+    <script>
+        // Puedes agregar funciones de JavaScript para interactuar con la hoja de personaje
+        document.querySelector('.btn').addEventListener('click', () => {
+            alert('Level Up feature clicked!');
+        });
+    </script>
+</body>
+</html>

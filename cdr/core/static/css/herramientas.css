@@ -1,0 +1,24 @@
+.game-card {
+    background-color: #0D1D13; /* Fondo oscuro para armonizar con el fondo principal */
+    border: 1px solid #1A3B2A; /* Borde sutil en tono verde oscuro */
+    color: #C8D6C3; /* Color del texto principal */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.game-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra en hover para resaltar */
+}
+
+.game-card .card-title {
+    color: #A1C181; /* Color para el título, en un verde claro */
+}
+
+.game-card .card-text {
+    color: #7F9E8B; /* Color para el texto de estado, más apagado */
+}
+
+/* Imagen de juego */
+.game-card img {
+    border-bottom: 1px solid #1A3B2A; /* Borde debajo de la imagen */
+}
