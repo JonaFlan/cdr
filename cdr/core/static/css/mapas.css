@@ -1,0 +1,8 @@
+.map-container {
+    width: 100%;
+    max-width: 1200px; /* Limita el ancho máximo */
+    margin: 0 auto;    /* Centra el mapa */
+    border: 2px solid #A1C181; /* Añade un borde temático */
+    border-radius: 10px;       /* Esquinas redondeadas */
+    overflow: hidden;          /* Asegura que no sobresalga */
+}

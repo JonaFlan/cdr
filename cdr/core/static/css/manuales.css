@@ -1,0 +1,16 @@
+.list-group-item {
+    border: 1px solid #A1C181;
+    border-radius: 10px;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.list-group-item:hover {
+    background-color: #A1C181;
+    color: #000000;
+    transform: scale(1.05);
+}
+
+.list-group-item img {
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}

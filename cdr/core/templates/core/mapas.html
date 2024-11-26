@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Herramientas{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href="{% static 'css/mapas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="wrapper">
+    <h1>GENERADOR DE MAPAS</h1>
+    <main class="container mt-5 p-3 container-principal">
+        <h1>Mapa Interactivo</h1>
+        <div class="map-container">
+            <iframe 
+                src="https://www.mipui.net/app/index.html?mid=ml1iq6ytmqx&secret=sa6xd9ynytn" 
+                width="100%" 
+                height="600" 
+                frameborder="0" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </main>
+
+{% endblock %}
+
+

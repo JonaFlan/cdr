@@ -8,10 +8,77 @@
 {% endblock %}
 
 {% block content %}
-<main class="container mt-5 p-3 container-principal">
-
-    <div class="none">
-
-    </div>
+<div class="wrapper" >
+    <h1>HERRAMIENTAS</h1>
+    <div class="cols">
+        <div class="cols">
+        </div>
+              <div class="col" ontouchstart="this.classList.toggle('hover');">
+                  <div class="container">
+                      <div class="front" style="background-image: url({% static 'img/dice-icon.png' %});">
+                          <div class="inner">
+                              <p>DADOS</p>
+                <span>Lanza Dados</span>
+                          </div>
+                      </div>
+                      <div class="back" style="background-image: url({% static 'img/dice-icon2.png' %});">
+                          <div class="inner">
+                              <p>Dados Virtuales.</p>
+                              <a href="{% url 'dado' %}" class="btn">Ir a la herramienta</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col" ontouchstart="this.classList.toggle('hover');">
+                  <div class="container">
+                      <div class="front" style="background-image: url({% static 'img/hojapj.png' %});">
+                          <div class="inner">
+                              <p>PERSONAJES</p>
+                <span>Crea tu personaje</span>
+                          </div>
+                      </div>
+                      <div class="back" style="background-image: url({% static 'img/hojapj2.png' %});">
+                          <div class="inner">
+                              <p>Crear un nuevo personaje se guardara en tu perfil.</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col" ontouchstart="this.classList.toggle('hover');">
+                  <div class="container">
+                      <div class="front" style="background-image: url({% static 'img/manuales.png' %});">
+                          <div class="inner">
+                              <p>Manuales</p>
+                <span>Expande tu Conocimiento</span>
+                          </div>
+                      </div>
+                      <div class="back" style="background-image: url({% static 'img/manuales2.png' %});">
+                          <div class="inner">
+                              <p>Conjunto de manuales de reglas para varios juegos.</p>
+                              <li><a href="{% url 'manuales' %}">Manuales</a></li>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col" ontouchstart="this.classList.toggle('hover');">
+                  <div class="container">
+                      <div class="front" style="background-image: url({% static 'img/mapas.png' %});">
+                          <div class="inner">
+                              <p>MAP GENERATOR</p>
+                
+                          </div>
+                      </div>
+                      <div class="back" style="background-image: url({% static 'img/mapas2.png' %});">
+                          <div class="inner">
+                              <p>Crea y comparte tu mapa generado.</p>
+                              <li><a href="{% url 'mapas' %}">Mapa Interactivo</a></li>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+   </div>
+    
 </main>
+
 {% endblock %}

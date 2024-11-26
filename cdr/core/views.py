@@ -3,7 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Sesion, Juego, Noticia
 # Create your views here.
+def manuales(request):
+    return render(request, 'core/manuales.html')
 
+def mapas(request):
+    return render(request, 'core/mapas.html')
 
 def dado(request):
     return render(request, 'core/dado.html')  # Ajuste para la ruta dentro de 'templates/core'
