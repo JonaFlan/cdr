@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Sesion, Juego, Noticia
 # Create your views here.
+def hojapj(request):
+    return render(request, 'core/hojapj.html')
+
 def manuales(request):
     return render(request, 'core/manuales.html')
 

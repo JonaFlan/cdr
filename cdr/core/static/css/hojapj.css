@@ -1,67 +1,717 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #1c1c1c;
-    color: #e0e0e0;
-    padding: 20px;
+    background-color: #222;
+    color: #fff;
+    display:block;
+    
+    height: 100vh;
+    margin: 0;
 }
 
-.character-sheet {
-    max-width: 800px;
-    margin: auto;
-    background-color: #2c2c2c;
+.character-card {
+    background-color: #333;
+    border: 2px solid #444;
     border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    width: 300px;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
-.header {
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #555;
+}
+
+.character-info {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.character-info h2 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #e91e63;
+}
+
+.character-info p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #bbb;
+}
+
+.card-settings button {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.card-settings button:hover {
+    color: #fff;
+}
+
+.card-body {
+    margin-top: 10px;
+}
+
+.card-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.card-buttons button {
+    flex: 1 1 calc(50% - 10px);
+    background-color: #444;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 0.9em;
+    cursor: pointer;
+    text-align: center;
+}
+
+.card-buttons button:hover {
+    background-color: #555;
+    border-color: #e91e63;
+}
+
+/* #########################################HITPOINTS###############*/
+.hit-points-card {
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 10px;
+    width: 350px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+    /* Separación entre tarjetas */
+}
+
+.hit-points-card .card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
 }
 
-.level-up-btn,
-.inspiration-btn {
-    background-color: #d9534f;
+.hit-points-card .card-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #e91e63;
+}
+
+.hit-points-card .card-settings button {
+    background-color: transparent;
     border: none;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
+    color: #888;
     cursor: pointer;
+    font-size: 1.2em;
 }
 
-.level-up-btn:hover,
-.inspiration-btn:hover {
-    background-color: #c9302c;
+.hit-points-card .card-settings button:hover {
+    color: #fff;
 }
 
-.stats-section {
+.hit-points-card .hit-points-values {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+
+.hit-points-card .value {
+    text-align: center;
+    flex: 1;
+}
+
+.hit-points-card .value p {
+    font-size: 1.2em;
+    margin: 0;
+    color: #fff;
+}
+
+.hit-points-card .value span {
+    font-size: 0.9em;
+    color: #bbb;
+}
+
+.hit-points-card .card-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.hit-points-card .card-buttons button {
+    background-color: #444;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: #fff;
+    padding: 8px 15px;
+    font-size: 0.9em;
+    cursor: pointer;
+    text-align: center;
+    flex: 1;
+    margin: 0 5px;
+}
+
+.hit-points-card .card-buttons button:hover {
+    background-color: #555;
+    border-color: #e91e63;
+}
+
+/* Estilos para Íconos */
+
+.card-header i,
+.hit-points-card .card-header i {
+    margin-right: 5px;
+    color: #e91e63;
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
+.card-buttons button i,
+.hit-points-card .card-buttons button i {
+    margin-right: 5px;
+    color: #bbb;
+    font-size: 1em;
+    vertical-align: middle;
+}
+
+.card-buttons button:hover i,
+.hit-points-card .card-buttons button:hover i {
+    color: #e91e63;
+}
+
+.value p i {
+    margin-right: 5px;
+    font-size: 1.2em;
+    color: #e91e63;
+    vertical-align: middle;
+}
+
+.card-settings button i {
+    font-size: 1.2em;
+    color: #888;
+}
+
+.card-settings button:hover i {
+    color: #fff;
+}
+/*ability scores*/
+.ability-scores-card {
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 10px;
+    width: 100%;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     margin-top: 20px;
 }
 
-.score-container {
-    text-align: center;
-    padding: 10px;
-    background-color: #444;
-    border-radius: 5px;
-    width: 80px;
-}
-
-.combat-section {
-    margin-top: 30px;
-}
-
-.attack-table {
-    background-color: #3c3c3c;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.attack-row {
+.ability-scores-card .card-header {
     display: flex;
     justify-content: space-between;
-    padding: 5px;
-    border-bottom: 1px solid #555;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
 }
+
+.ability-scores-card .card-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #e91e63;
+}
+
+.ability-scores-card .card-settings button {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.ability-scores-card .card-settings button:hover {
+    color: #fff;
+}
+
+.scores {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.score {
+    background-color: #444;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    flex: 1 1 calc(16.6% - 10px); /* 6 columnas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.score p {
+    font-size: 1.5em;
+    color: #e91e63;
+    margin: 0;
+}
+
+.score span {
+    font-size: 1em;
+    color: #bbb;
+    display: block;
+    margin-top: 5px;
+}
+
+.details {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #fff;
+}
+
+.details span {
+    font-size: 1em;
+    color: #e91e63;
+}
+
+.details small {
+    font-size: 0.8em;
+    color: #bbb;
+}
+/*ac speed#########*/
+.ac-speed-card {
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 10px;
+    width: 300px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+.ac-speed-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.ac-speed-card .card-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #e91e63;
+}
+
+.ac-speed-card .card-settings button {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.ac-speed-card .card-settings button:hover {
+    color: #fff;
+}
+
+.ac-speed-card .ac-speed-values {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.ac-speed-card .value {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #444;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.ac-speed-card .value .icon {
+    font-size: 1.5em;
+    color: #e91e63;
+    margin-right: 10px;
+}
+
+.ac-speed-card .value p {
+    font-size: 1.5em;
+    color: #fff;
+    margin: 0;
+}
+
+.ac-speed-card .value span {
+    font-size: 0.9em;
+    color: #bbb;
+    display: block;
+}
+
+.ac-speed-card .value .dropdown {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.ac-speed-card .value .dropdown:hover {
+    color: #fff;
+}
+/* DEFENSES Card */
+.defenses-card {
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 10px;
+    width: 300px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+.defenses-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.defenses-card .card-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #e91e63;
+}
+
+.defenses-card .card-settings button {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.defenses-card .card-settings button:hover {
+    color: #fff;
+}
+
+.defenses-card .defenses-values {
+    margin-top: 10px;
+}
+
+.defenses-card .defenses-values p {
+    margin: 5px 0;
+    font-size: 1em;
+    color: #fff;
+    text-align: left;
+}
+
+
+/* CONDITIONS Card */
+.conditions-card {
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 10px;
+    width: 300px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+.conditions-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.conditions-card .card-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #e91e63;
+}
+
+.conditions-card .card-settings button {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.conditions-card .card-settings button:hover {
+    color: #fff;
+}
+
+.conditions-card .conditions-values {
+    margin-top: 10px;
+}
+
+.conditions-card .conditions-values p {
+    margin: 5px 0;
+    font-size: 1em;
+    color: #fff;
+    text-align: left;
+}
+
+/* SENSES Card */
+.senses-card {
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 10px;
+    width: 300px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+.senses-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.senses-card .card-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #e91e63;
+}
+
+.senses-card .card-settings button {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.senses-card .card-settings button:hover {
+    color: #fff;
+}
+
+.senses-card .senses-passive,
+.senses-card .senses-other {
+    margin-top: 10px;
+}
+
+.senses-card .senses-passive h4,
+.senses-card .senses-other h4 {
+    font-size: 1em;
+    color: #bbb;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+    margin: 0 0 10px;
+}
+
+.senses-card .sense {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    color: #fff;
+}
+
+.senses-card .sense .tag {
+    background-color: #444;
+    border-radius: 5px;
+    padding: 2px 5px;
+    font-size: 0.8em;
+    color: #bbb;
+    margin: 0 5px;
+}
+
+.senses-card .senses-other p {
+    margin: 5px 0;
+    font-size: 1em;
+    color: #fff;
+    text-align: left;
+}
+
+
+/* PROFICIENCIES & LANGUAGES Card */
+.proficiencies-card {
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 10px;
+    width: 300px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+.proficiencies-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    padding-bottom: 10px;
+}
+
+.proficiencies-card .card-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #e91e63;
+}
+
+.proficiencies-card .card-settings button {
+    background-color: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.proficiencies-card .card-settings button:hover {
+    color: #fff;
+}
+
+.proficiencies-card .proficiencies-values {
+    margin-top: 10px;
+}
+
+.proficiencies-card .proficiency {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #444;
+    padding-bottom: 5px;
+}
+
+.proficiencies-card .proficiency:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.proficiencies-card .proficiency h4 {
+    margin: 0;
+    font-size: 1em;
+    color: #bbb;
+}
+
+.proficiencies-card .proficiency p {
+    margin: 5px 0 0;
+    font-size: 1em;
+    color: #fff;
+    text-align: left;
+}
+
+
+
+/* TAB CARD */
+.tab-card {
+    background-color: #333;
+    border: 2px solid #444;
+    border-radius: 10px;
+    width: 100%;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    margin-top: 20px;
+}
+
+/* Pestañas */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #444;
+    margin-bottom: 15px;
+}
+
+.tab {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    margin-right: 5px;
+}
+
+.tab.active {
+    background-color: #e91e63;
+    color: #fff;
+}
+
+.tab:hover {
+    background-color: #555;
+}
+
+/* Contenido de las Pestañas */
+.tab-content {
+    display: none;
+    color: #fff;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Encabezado de Combate */
+.combat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.combat-header select {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.add-button, .settings-button {
+    background-color: #444;
+    border: none;
+    color: #fff;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.add-button:hover, .settings-button:hover {
+    background-color: #555;
+}
+
+/* Detalles de Combate */
+.combat-section h4 {
+    font-size: 1em;
+    color: #bbb;
+    margin-bottom: 5px;
+}
+
+.combat-section p {
+    margin: 0;
+    font-size: 1em;
+    color: #fff;
+}
+
+.combat-details span {
+    display: block;
+    margin: 5px 0;
+    font-size: 0.9em;
+    color: #bbb;
+}
+
+
+
