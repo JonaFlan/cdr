@@ -9,7 +9,7 @@ from django.views.generic import (
 
 # Create your views here.
 def hojapj(request):
-    return render(request, 'core/hojapj.html')
+    return render(request, 'core/dnd-char-generator-master/index.html')
 
 def manuales(request):
     return render(request, 'core/manuales.html')

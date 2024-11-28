@@ -1087,6 +1087,12 @@ function dice_initialize(container) {
 		refresh_store();
 	});
     box.bind_throw($t.id('throw'), notation_getter, before_roll, after_roll);
+
+    var desktopThrowBtn = document.querySelector('.desktop-throw');
+    if (desktopThrowBtn) {
+        box.bind_throw(desktopThrowBtn, notation_getter, before_roll, after_roll);
+    }
+
 	refresh_log();
 	refresh_store();
 }
@@ -1121,3 +1127,70 @@ function rollStore(id) {
 
 
     dice_initialize(document.body);
+
+
+
+//  ---------------------------------- DOM CONTENT LOADED --------------------------
+
+// Funcionalidad para móviles
+document.addEventListener('DOMContentLoaded', function() {
+    const mainInput = document.getElementById('rollConfig');
+    const mobileInput = document.querySelector('.mobile-roll-input');
+    const mainButton = document.getElementById('throw');
+    const mobileButton = document.querySelector('.mobile-throw');
+
+    // Alternar visibilidad - Variables
+    const eyeBtn = document.getElementById('mobileSavedDice');
+    const eyeIcon = eyeBtn.querySelector('.eye-icon');
+    const historyBtn = document.querySelector('.history-btn');
+    const throwBtn = document.querySelector('.throw-btn');
+    const mobileDiceButtons = document.querySelector('.mobile-dice-buttons');
+    let isHidden = false;
+
+
+    // Ir alternando entre invisible y visible
+    eyeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        isHidden = !isHidden;
+        
+        // Toggle clase del ícono
+        eyeIcon.classList.toggle('closed');
+        
+        // Toggle visibilidad de los botones específicos
+        if (historyBtn) historyBtn.classList.toggle('semi-transparent');
+        if (throwBtn) throwBtn.classList.toggle('semi-transparent');
+        
+        // Toggle visibilidad de los botones de dados
+        if (mobileDiceButtons) mobileDiceButtons.classList.toggle('hidden');
+    });
+
+    // Sincronizar inputs
+    if (mobileInput && mainInput) {
+        // Sincronizar de móvil a desktop
+        mobileInput.addEventListener('input', function() {
+            mainInput.value = this.value;
+        });
+
+        // Sincronizar de desktop a móvil
+        mainInput.addEventListener('input', function() {
+            mobileInput.value = this.value;
+        });
+    }
+
+    // Hacer que el botón móvil active el botón principal
+    if (mobileButton && mainButton) {
+        mobileButton.addEventListener('click', function() {
+            mainButton.click();
+        });
+    }
+
+    // Los botones de dados predefinidos
+    document.querySelectorAll('.dice-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const diceValue = this.getAttribute('data-dice');
+            if (mainInput) mainInput.value = diceValue;
+            if (mobileInput) mobileInput.value = diceValue;
+            if (mainButton) mainButton.click();
+        });
+    });
+});
