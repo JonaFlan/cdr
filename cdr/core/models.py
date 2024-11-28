@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from urllib.parse import urlparse, parse_qs
 
 # Create your models here.
 
@@ -29,6 +30,9 @@ class Perfil(models.Model):
     class Meta:
         verbose_name_plural = 'Perfiles'
 
+    def __str__(self):
+        return f'Perfil de {self.usuario.username}'
+
 
 class Juego(models.Model):
     nombre = models.CharField(max_length = 150)
@@ -36,7 +40,7 @@ class Juego(models.Model):
     proveedor = models.CharField(max_length= 100)
 
     ESTADO_CHOICES = [
-        ('DISPONIBLE', 'Disponible'),
+        ('DISPONIBLE', 'Disponible para préstamo'),
         ('PRESTADO', 'Prestado'),
         ('RESERVADO', 'Reservado'),
         ('NO_DISPONIBLE', 'No disponible'),
@@ -48,11 +52,40 @@ class Juego(models.Model):
     )
     
     imagen = models.ImageField(upload_to='juegos_imagenes/', blank=True, null=True)
-    comentario = models.TextField(max_length=500)
-    manual=models.FileField(upload_to='juegos_pdfs/', blank=True, null=True)
+    descripcion = models.TextField(max_length=2000, blank=True, null=True)
+    video_tutorial = models.URLField(max_length=500, blank=True, null=True)
+    jugadores_min = models.PositiveIntegerField(default=1)
+    jugadores_max = models.PositiveIntegerField(default=2) 
+
+    def video_embed_url(self):
+        if self.video_tutorial:
+            url = urlparse(self.video_tutorial)
+            # Si el enlace es del formato https://youtu.be/VIDEO_ID
+            if url.netloc == "youtu.be":
+                return f"https://www.youtube.com/embed{url.path}"
+            # Si el enlace es del formato https://www.youtube.com/watch?v=VIDEO_ID
+            elif url.netloc in ["www.youtube.com", "youtube.com"] and "v" in parse_qs(url.query):
+                video_id = parse_qs(url.query)["v"][0]
+                return f"https://www.youtube.com/embed/{video_id}"
+        return None
 
     def __str__(self):
         return f'{self.nombre} | {self.estado}'
+    
+class Manual(models.Model):
+    juego = models.ForeignKey(
+        Juego,
+        on_delete=models.CASCADE,
+        related_name='manuales'
+    )
+    titulo = models.CharField(max_length=255)
+    archivo = models.FileField(upload_to='juegos_pdfs/')
+
+    def __str__(self):
+        return f'{self.titulo} | ({self.juego.nombre})'
+    
+    class Meta:
+        verbose_name_plural = 'Manuales'
 
 class Sesion(models.Model):
     juego = models.ForeignKey(Juego, on_delete=models.CASCADE)

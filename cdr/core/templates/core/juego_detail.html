@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Detalle del Juego: {{ juego.nombre }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            {% if juego.imagen %}
+                <img src="{{ juego.imagen.url }}" alt="{{ juego.nombre }}" class="img-fluid">
+            {% else %}
+                <img src="https://via.placeholder.com/200" alt="Imagen no disponible" class="img-fluid">
+            {% endif %}
+        </div>
+        <div class="col-md-8 mb-3">
+            <h1>{{ juego.nombre }}</h1>
+            <p>{{ juego.descripcion }}</p>
+            <p><strong>Estado:</strong> {{ juego.get_estado_display }}</p>
+            <p><strong>Rango de Jugadores:</strong> {{ juego.jugadores_min }} - {{ juego.jugadores_max }}</p>
+        </div>
+        {% if juego.video_tutorial %}
+        <div class="video-tutorial mt-3 col-md-12">
+            <h5 class="text-center">Video Tutorial</h5>
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe width="100%" height="700" 
+                        src="{{ juego.video_embed_url }}" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}
