@@ -181,25 +181,263 @@
     font-weight: 300;
   }
   
-  @media screen and (max-width: 64rem){
-    .col{
-      width: calc(33.333333% - 2rem);
-    }
+/* Ajustes de responsividad */
+@media screen and (max-width: 80rem) {
+  .wrapper {
+    width: 95%;
   }
   
-  @media screen and (max-width: 48rem){
-    .col{
-      width: calc(50% - 2rem);
-    }
+  h1 {
+    font-size: 2rem;
   }
-  
-  @media screen and (max-width: 32rem){
-    .cols {
-      display: block; 
-    }
+}
 
-    .col {
-      width: 100%; 
-      margin: 0 0 2rem 0; 
-    }
+@media screen and (max-width: 64rem) {
+  .front,
+  .back {
+    min-height: 200px;
   }
+
+  .front .inner p {
+    font-size: 1.75rem;
+  }
+
+  .inner {
+    padding: 1.5rem;
+  }
+
+  .cols {
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .col {
+    width: calc(33.333333% - 1rem);
+    margin: 0.5rem;
+  }
+
+  .front .inner p {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .front .inner span {
+    font-size: 0.9rem;
+  }
+  
+  .back .inner p {
+    font-size: 1rem;
+  }
+}
+
+@media screen and (max-width: 48rem) {
+  h1 {
+    font-size: 1.75rem;
+    margin: 1.5rem 0;
+  }
+
+  .cols {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0.5rem;
+    align-content: center;
+  }
+  
+  .col {
+    width: calc(50% - 1rem);
+    margin: 0.5rem;
+  }
+
+  .front,
+  .back {
+    min-height: 180px;
+  }
+
+  .front .inner p {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .front .inner span {
+    font-size: 0.8rem;
+  }
+  
+  .back .inner p {
+    font-size: 0.9rem;
+  }
+  
+  .front .inner p:after {
+    width: 3rem;
+    bottom: -0.5rem;
+  }
+}
+
+@media screen and (max-width: 32rem) {
+  .wrapper {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .cols {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0.5rem;
+  }
+
+  .container {
+    transform-style: preserve-3d;
+    perspective: 800px;
+  }
+  
+  .col {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .front,
+  .back {
+    min-height: 160px;
+  }
+
+  .front .inner p {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .front .inner p:after {
+    width: 3rem;
+    bottom: -0.5rem;
+  }
+
+  .back .inner p {
+    font-size: 1rem;
+  }
+
+  .inner {
+    -webkit-transform: translateY(-50%) translateZ(40px) scale(0.94);
+    transform: translateY(-50%) translateZ(40px) scale(0.94);
+  }
+}
+
+/* dispositivos muy pequeños */
+@media screen and (max-width: 20rem) {
+  .wrapper {
+    width: 95%;
+  }
+
+  .cols {
+    gap: 1.5rem;
+  }
+  
+  .col {
+    max-width: 240px;
+  }
+
+  .front,
+  .back {
+    min-height: 140px;
+  }
+
+  .front .inner p {
+    font-size: 1.1rem;
+  }
+
+  .inner {
+    padding: 0.75rem;
+  }
+}
+
+/* Por si sobresale el texto del cuadro */
+.front .inner p,
+.back .inner p {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+.inner {
+  width: 90%;
+  margin: 0 auto;
+  left: 50%;
+  transform: translate(-50%, -50%) translateZ(60px) scale(0.94);
+}
+
+
+.game-card {
+  border: none;
+  background: linear-gradient(145deg, #4a1d66 0%, #280938 100%);
+  box-shadow: 0 4px 15px rgba(74, 29, 102, 0.3),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(74, 29, 102, 0.4),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.game-card .card-body {
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(74, 29, 102, 0.5);
+}
+
+.game-card .card-title {
+  color: #fff;
+}
+
+.game-card .card-text {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.game-card img {
+  border-radius: 4px 4px 0 0;
+}
+
+/* Media queries para dispositivos móviles */
+@media screen and (max-width: 768px) {
+  .game-card {
+      max-width: 90%;
+      margin: 0 auto;
+  }
+
+  
+  .game-card .card-body {
+      padding: 0.75rem;
+  }
+  
+  .game-card .card-title {
+      font-size: 1.1rem;
+  }
+  
+  .game-card .card-text {
+      font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .game-card {
+      max-width: 95%;
+  }
+  
+  .game-card .card-body {
+      padding: 0.5rem;
+  }
+  
+  .game-card .card-title {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+  }
+  
+  .container-principal {
+      padding: 1rem !important;
+  }
+}

@@ -12,10 +12,10 @@
   <title>Lanzador de Dados</title>
   <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
   <link rel="stylesheet" href="{% static 'css/dado.css' %}">
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-<!-- partial:index.partial.html -->
+<!-- Panel de PC -->
 <div class="container-fluid h-100">
 	<div class="row h-100">
 		<div class="col-3" style="height:100vh; overflow:hidden;">
@@ -31,9 +31,13 @@
 									<label class="sr-only" for="rollConfig">Ingresa la configuracion del dado</label>
 									<div class="input-group mr-2">
 										<input type="text" class="form-control flex-grow-1 flex-shrink-1" id="rollConfig" value="1d20">
-										<a href="#" id="rollHelp" class="input-group-append"><span class="input-group-text">?</span></a>
+										<div class="input-group-append">
+											<a href="#" id="rollHelp" class="input-group-text">?</a>
+											<button class="btn btn-primary desktop-throw">
+												<i class="fas fa-dice"></i>
+											</button>
+										</div>
 									</div>
-									<button type="submit" class="btn btn-primary" id="throw">Lanzar</button>
 								</div>
 							</div>
 							<div class="card-body">
@@ -47,22 +51,23 @@
 						<div class="card">
 							<div class="card-header">
 								<div class="d-flex">
-									<div class="flex-grow-1 flex-shrink-1">Dados Salvados</div>
-									<button id="toggleSave" type="submit" class="btn btn-success btn-sm"><strong>+</strong></button>
+									<div class="flex-grow-1 flex-shrink-1">Selecciona un dado para lanzar</div>
 								</div>
 							</div>
 							<div class="list-group list-group-flush">
-								<div class="list-group-item" id="saveBlock" style="display:none">
-									<div class="d-flex">
-										<label class="sr-only" for="rollConfig">Ingresa el nombre del dado</label>
-										<div class="input-group mr-2">
-											<input type="text" class="form-control flex-grow-1 flex-shrink-1 mr-2" id="rollName">
-										</div>
-										<button type="submit" class="btn btn-primary" id="saveThrow">Guardar</button>
+								<div class="card-body p-3">
+									<div class="dice-selector">
+										<button class="btn btn-outline-primary dice-button" data-dice="1d4">D4</button>
+										<button class="btn btn-outline-primary dice-button" data-dice="1d6">D6</button>
+										<button class="btn btn-outline-primary dice-button" data-dice="1d8">D8</button>
+										<button class="btn btn-outline-primary dice-button" data-dice="1d10">D10</button>
+										<button class="btn btn-outline-primary dice-button" data-dice="1d12">D12</button>
+										<button class="btn btn-outline-primary dice-button" data-dice="1d20">D20</button>
+										<button class="btn btn-outline-primary dice-button" data-dice="1d100">D100</button>
 									</div>
 								</div>
 								<div class="list-group-item p-2">
-									<div class="list-group" id="savedRolls">
+									<div class="list-group" id="savedRolls" style="display: none;">
 									</div>
 								</div>
 							</div>
@@ -95,10 +100,87 @@
 		</div>
 	</div>
 </div>
+
+<!-- Botones del celular -->
+ 
+<div class="mobile-dice-buttons d-md-none">
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <h5>Elige:</h5>
+            <div class="dice-column" role="group" aria-label="Dice buttons">
+				<button class="btn btn-outline-primary dice-button" data-dice="1d100">D100</button>
+				<button class="btn btn-outline-primary dice-button" data-dice="1d20">D20</button>
+				<button class="btn btn-outline-primary dice-button" data-dice="1d12">D12</button>
+				<button class="btn btn-outline-primary dice-button" data-dice="1d10">D10</button>
+				<button class="btn btn-outline-primary dice-button" data-dice="1d8">D8</button>
+				<button class="btn btn-outline-primary dice-button" data-dice="1d6">D6</button>
+				<button class="btn btn-outline-primary dice-button" data-dice="1d4">D4</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- Panel móvil (oculto en desktop) -->
+    <!-- Botones flotantes -->
+	<div class="mobile-btns">
+		<button class="floating-btn saved-btn" id="mobileSavedDice">
+			<svg class="eye-icon" viewBox="0 0 24 24" width="24" height="24">
+				<!-- Ojo abierto -->
+				<path class="eye-open" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+				<!-- Ojo cerrado -->
+				<g class="eye-closed" opacity="0">
+					<path d="M12 6.5c-3.79 0-7.17 2.13-8.82 5.5 1.65 3.37 5.02 5.5 8.82 5.5s7.17-2.13 8.82-5.5C19.17 8.63 15.79 6.5 12 6.5zm0 10c-2.48 0-4.5-2.02-4.5-4.5S9.52 7.5 12 7.5s4.5 2.02 4.5 4.5-2.02 4.5-4.5 4.5z"/>
+					<path d="M2 2L22 22" stroke="currentColor" stroke-width="2"/>
+				</g>
+			</svg>
+		</button>
+		<button type="submit" class="btn btn-primary floating-btn throw-btn" id="throw">
+			<i class="fas fa-dice"></i>
+		</button>
+		<button class="floating-btn history-btn" id="mobileHistory">
+			<i class="fas fa-history"></i>
+		</button>
+	</div>
+</div>
+
+<!-- Modales -->
+<div class="mobile-modal" id="savedDiceModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5>Dados Guardados</h5>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div id="mobileSavedRolls"></div>
+    </div>
+</div>
+
+<div class="mobile-modal" id="historyModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5>Historial de Lanzamientos</h5>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div id="mobileRollLog"></div>
+    </div>
+</div>
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const desktopThrow = document.getElementById('desktopThrow');
+		const mainThrow = document.getElementById('throw');
+		
+		if (desktopThrow && mainThrow) {
+			desktopThrow.addEventListener('click', function(e) {
+				e.preventDefault();
+				mainThrow.click();
+			});
+		}
+	});
+</script>
 <!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/103/three.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/103/three.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js'></script>
 <script  src="{% static 'js/dado.js' %}"></script>
+
+
 
 </body>
 </html>

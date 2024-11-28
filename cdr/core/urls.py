@@ -1,5 +1,11 @@
 from django.urls import path
-from .views import index, biblioteca, perfil, sesiones, inscribirse_sesion, anular_inscripcion_sesion, noticias, dado, herramientas ,mapas, manuales, hojapj, ver_manual_juego
+from .views import (
+    index, biblioteca, perfil, sesiones, 
+    inscribirse_sesion, anular_inscripcion_sesion, 
+    noticias, dado, herramientas, mapas, 
+    manuales, hojapj, ver_manual_juego
+)
+
 urlpatterns = [
     path('', index, name='index'),
     path('biblioteca/', biblioteca, name='biblioteca' ),

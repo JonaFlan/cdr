@@ -12,49 +12,49 @@
 
 {% block content %}
 <main class="container mt-5 p-3 container-principal">
-    <h1 class="text-center mb-4">Manuales de Juegos</h1>
+    <h1 class="text-center mb-4">Tutoriales de Juegos</h1>
     <div class="row">
         <!-- Columna de tarjetas -->
         <div class="col-md-3">
             <div class="list-group">
-                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarPDF('{% static 'pdfs/Arkham-Horror.pdf' %}')">
+                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarVideo('https://www.youtube.com/embed/aakzf4VZyow?si=XjBI_NlpNW3TiJ_o')">
                     <div class="d-flex w-100 align-items-center">
                         <img src="{% static 'img/manuales.png' %}" alt="Arkham Horror" class="img-thumbnail me-3" style="width: 50px; height: 50px;">
                         <h5 class="mb-1">Arkham Horror</h5>
                     </div>
-                    <small>Manual del juego</small>
+                    <small>Video Tutorial</small>
                 </a>
 
-                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarPDF('{% static 'pdfs/Azul.pdf' %}')">
+                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarVideo('https://www.youtube.com/embed/urpt0PQfIaw?si=S7q0Q3fLSpu_P0CG')">
                     <div class="d-flex w-100 align-items-center">
                         <img src="{% static 'img/manuales.png' %}" alt="Azul" class="img-thumbnail me-3" style="width: 50px; height: 50px;">
                         <h5 class="mb-1">Azul</h5>
                     </div>
-                    <small>Manual del juego</small>
+                    <small>Video Tutorial</small>
                 </a>
 
-                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarPDF('{% static 'pdfs/catan.pdf' %}')">
+                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarVideo('https://www.youtube.com/embed/mDgDnTV101M?si=xMF9TOFCfGULVjXm')">
                     <div class="d-flex w-100 align-items-center">
                         <img src="{% static 'img/manuales.png' %}" alt="Catan" class="img-thumbnail me-3" style="width: 50px; height: 50px;">
                         <h5 class="mb-1">Catan</h5>
                     </div>
-                    <small>Manual del juego</small>
+                    <small>Video Tutorial</small>
                 </a>
 
-                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarPDF('{% static 'pdfs/Gloomhaven.pdf' %}')">
+                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarVideo('https://www.youtube.com/embed/uhaXj2LHMww?si=yD5jgv_0c9ORDuBD')">
                     <div class="d-flex w-100 align-items-center">
                         <img src="{% static 'img/manuales.png' %}" alt="Gloomhaven" class="img-thumbnail me-3" style="width: 50px; height: 50px;">
                         <h5 class="mb-1">Gloomhaven</h5>
                     </div>
-                    <small>Manual del juego</small>
+                    <small>Video Tutorial</small>
                 </a>
 
-                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarPDF('{% static 'pdfs/King-of-New-York.pdf' %}')">
+                <a href="javascript:void(0);" class="list-group-item list-group-item-action py-3 px-4 manual-link" onclick="cambiarVideo('https://www.youtube.com/embed/4tFMAs6gjvo?si=CQhESVLmrTZwaQGp')">
                     <div class="d-flex w-100 align-items-center">
                         <img src="{% static 'img/manuales.png' %}" alt="King of New York" class="img-thumbnail me-3" style="width: 50px; height: 50px;">
                         <h5 class="mb-1">King of New York</h5>
                     </div>
-                    <small>Manual del juego</small>
+                    <small>Video Tutorial</small>
                 </a>
             </div>
         </div>
@@ -63,8 +63,8 @@
         <div class="col-md-9">
             <div class="map-container">
                 <iframe 
-                    id="pdfViewer"
-                    src="{% static 'pdfs/catan.pdf' %}" 
+                    id="videoViewer"
+                    src="https://www.youtube.com/embed/videoID3" 
                     width="100%" 
                     height="700" 
                     frameborder="0" 
@@ -76,8 +76,8 @@
 </main>
 
 <script>
-    function cambiarPDF(ruta) {
-        const iframe = document.getElementById('pdfViewer');
+    function cambiarVideo(ruta) {
+        const iframe = document.getElementById('videoViewer');
         iframe.src = ruta;
     }
 </script>

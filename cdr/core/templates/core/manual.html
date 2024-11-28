@@ -9,17 +9,23 @@
 
 {% block content %}
 <main class="container mt-5 p-3 container-principal">
-        <div class="map-container">
-            <iframe 
-                id="pdfViewer"
-                src="{{ juego.manual.url }} " 
-                width="100%" 
-                height="700" 
-                frameborder="0" 
-                allowfullscreen>
-            </iframe>
-        </div>
+    <div class="map-container text-center">
+        <iframe 
+            id="pdfViewer"
+            src="{{ juego.manual.url }}" 
+            class="w-100 d-none d-md-block" 
+            style="height: calc(100vh - 100px);" 
+            frameborder="0" 
+            allowfullscreen>
+        </iframe>
+        <p class="d-block d-md-none">
+            El visor no está disponible en dispositivos móviles. 
+            <a href="{{ juego.manual.url }}" target="_blank" class="btn btn-primary">
+                Abrir PDF
+            </a>
+        </p>
     </div>
+
 
 </main>
 {% endblock %}

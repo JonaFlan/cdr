@@ -3,50 +3,307 @@
     src: url('../fonts/medieval-font.ttf') format('truetype');
 }
 
+/* Estilos base */
+html, body { 
+    height: 100%; 
+    background-color: black; 
+    color: white; 
+    font-family: 'Medieval', cursive;
+}
 
-/*  NO tocar canvas  */
+/* Estilos del fondo */
+.velvet-lining { 
+    background-color: #000000;
+    background-image: url(madera2.jpg);
+    background-size: cover;
+}
 
+/* Estilos base de la interfaz */
+#canvas { 
+    overflow: hidden; 
+}
 
-html, body { height:100%; background-color: black; color: white; font-family: 'Medieval', cursive;}
-	.velvet-lining { 
-		background-color:#000000;
-		background-image:url(madera2.jpg);
-		background-size:cover;
-	}
-	#canvas { overflow: hidden; }
-	canvas { background-color:transparent; }
-	#rollHelp { text-decoration:none !important; }
-	#rollLog { height:10vh; overflow-y:scroll; }
-	#savedRolls { height:25vh; overflow-y:scroll; }
+canvas { 
+    background-color: transparent; 
+}
 
+#rollHelp { 
+    text-decoration: none !important; 
+}
 
+#rollLog { 
+    height: 10vh; 
+    overflow-y: scroll; 
+}
 
+#savedRolls { 
+    height: 25vh; 
+    overflow-y: scroll; 
+}
+
+/* Botones Góticos */
 .btn-dark-gothic {
-    background-color: #2c2c2c; /* Color oscuro de fondo */
-    color: #f8f9fa; /* Color claro del texto */
-    border: 2px solid #4d4d4d; /* Borde más oscuro */
+    background-color: #2c2c2c;
+    color: #f8f9fa;
+    border: 2px solid #4d4d4d;
     padding: 10px 20px;
     border-radius: 5px;
-    font-family: 'Garamond', serif; /* Fuente más gótica */
+    font-family: 'Garamond', serif;
     font-size: 1.2em;
     text-transform: uppercase;
     letter-spacing: 2px;
     transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .btn-dark-gothic:hover {
-    background-color: #1a1a1a; /* Color de fondo más oscuro al pasar el mouse */
-    border-color: #f8f9fa; /* Borde más claro al pasar el mouse */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7); /* Sombra más intensa */
+    background-color: #1a1a1a;
+    border-color: #f8f9fa;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
 }
 
 .btn-dark-gothic:active {
-    background-color: #0d0d0d; /* Color de fondo aún más oscuro al hacer clic */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.9); /* Sombra más pequeña al hacer clic */
+    background-color: #0d0d0d;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.9);
 }
 
 .btn-dark-gothic:focus {
-    outline: none; /* Sin borde de enfoque */
+    outline: none;
 }
 
+/* Modales para móvil */
+.mobile-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    z-index: 2000;
+}
+
+.modal-content {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #1a1a1a;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+    color: white;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    padding: 5px;
+}
+
+/* Estilos para el selector de dados */
+.dice-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    background-color: white;
+    padding: 0.5rem;
+}
+
+.dice-selector .dice-button {
+    min-width: 60px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.dice-selector .dice-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.dice-selector .dice-button:active {
+    transform: translateY(0);
+}
+
+@media screen and (min-width: 769px) {
+    .mobile-btns {
+        display: none;
+    }
+}
+
+/* Estilos específicos para móvil */
+@media screen and (max-width: 768px) {
+    .col-3 {
+        display: none;
+    }
+    
+    .col-9 {
+        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    /* Botones flotantes */
+    .floating-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
+        position: fixed;
+        z-index: 1000;
+    }
+    
+    .throw-btn {
+        background-color: #007bff;
+        bottom: 100px;
+        right: 20px;
+    }
+    
+    .saved-btn {
+        background-color: #ffffff;
+        bottom: 180px;
+        right: 20px;
+    }
+    
+    .history-btn {
+        background-color: #6c757d;
+        bottom: 260px;
+        right: 20px;
+    }
+    
+    .floating-btn:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    /* Botones de dados predefinidos */
+    .mobile-dice-buttons {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        border-radius: 10px;
+    }
+    
+    .mobile-dice-buttons .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .mobile-dice-buttons .btn {
+        margin: 4px;
+        min-width: 60px;
+    }
+
+    .dice-selector {
+        padding: 0.25rem;
+        gap: 0.25rem;
+    }
+
+    .dice-selector .dice-button {
+        min-width: 50px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Estilos para botones verticales en móvil */
+.mobile-dice-buttons {
+    position: fixed;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+.dice-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dice-column .dice-button {
+    width: 70px;
+    height: 40px;
+    background: white;
+    border: 2px solid #007bff;
+    color: #007bff;
+    font-weight: bold;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.dice-column .dice-button:hover {
+    background: #007bff;
+    color: white;
+}
+
+.dice-column .dice-button:active {
+    transform: scale(0.95);
+}
+
+/* Animaciones */
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+
+/*   Botón para el ojo   */
+
+.floating-btn .eye-icon {
+    fill: currentColor;
+    transition: transform 0.3s ease;
+}
+
+.semi-transparent {
+    opacity: 0.5 !important;
+    transition: opacity 0.3s ease;
+}
+
+.mobile-dice-buttons.hidden {
+    display: none;
+}
+
+/* Animación del ojo */
+.eye-icon .eye-open,
+.eye-icon .eye-closed {
+    transition: opacity 0.3s ease;
+}
+
+.eye-icon.closed .eye-open {
+    opacity: 0;
+}
+
+.eye-icon.closed .eye-closed {
+    opacity: 1;
+}
+
+.eye-open {
+    opacity: 1;
+}
+
+.eye-closed {
+    opacity: 0;
+}
