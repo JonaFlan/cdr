@@ -49,6 +49,7 @@ class Juego(models.Model):
     
     imagen = models.ImageField(upload_to='juegos_imagenes/', blank=True, null=True)
     comentario = models.TextField(max_length=500)
+    manual=models.FileField(upload_to='juegos_pdfs/', blank=True, null=True)
 
     def __str__(self):
         return f'{self.nombre} | {self.estado}'

@@ -62,3 +62,8 @@ def inscribirse_sesion(request, sesion_id):
 def noticias(request):
     noticias = Noticia.objects.order_by('-fecha_publicacion')
     return render(request, 'core/noticias.html', {'noticias': noticias})
+
+@login_required
+def ver_manual_juego(request, juego_id):
+    juego = get_object_or_404(Juego, id=juego_id)
+    return render(request, 'core/manual.html', {'juego': juego})

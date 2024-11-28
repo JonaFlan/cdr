@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Biblioteca{% endblock %}
+
+{% block custom %}
+<!-- <link rel="stylesheet" href="{% static 'css/manual.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+<main class="container mt-5 p-3 container-principal">
+        <div class="map-container">
+            <iframe 
+                id="pdfViewer"
+                src="{{ juego.manual.url }} " 
+                width="100%" 
+                height="700" 
+                frameborder="0" 
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

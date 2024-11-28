@@ -194,8 +194,12 @@
   }
   
   @media screen and (max-width: 32rem){
-    .col{
-      width: 100%;
-      margin: 0 0 2rem 0;
+    .cols {
+      display: block; 
+    }
+
+    .col {
+      width: 100%; 
+      margin: 0 0 2rem 0; 
     }
   }
