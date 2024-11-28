@@ -1,13 +1,14 @@
 from django.urls import path
+from .views import SesionCreateView, SesionUpdateView, SesionDeleteView
+from .views import JuegoDetailView, JuegoCreateView, JuegoUpdateView, JuegoDeleteView
+from .views import NoticiaDetailView, NoticiaCreateView, NoticiaUpdateView, NoticiaDeleteView
 from .views import (
     index, biblioteca, perfil, sesiones, 
     inscribirse_sesion, anular_inscripcion_sesion, 
     noticias, dado, herramientas, mapas, 
     manuales, hojapj, ver_manual_juego
-from .views import SesionCreateView, SesionUpdateView, SesionDeleteView
-from .views import JuegoDetailView, JuegoCreateView, JuegoUpdateView, JuegoDeleteView
-from .views import NoticiaDetailView, NoticiaCreateView, NoticiaUpdateView, NoticiaDeleteView
 )
+
 
 urlpatterns = [
     path('', index, name='index'),
