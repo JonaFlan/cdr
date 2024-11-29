@@ -3,20 +3,14 @@
 
 {% block title %}Dados{% endblock %}
 
-
-{% block content %}
-<!DOCTYPE html>
-<html lang="es" class="full-height">
-<head>
-  <meta charset="UTF-8">
-  <title>Lanzador de Dados</title>
+{% block custom %}
   <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'>
   <link rel="stylesheet" href="{% static 'css/dado.css' %}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
-<body>
-<!-- Panel de PC -->
-<div class="container-fluid h-100">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid h-100 mt-4">
 	<div class="row h-100">
 		<div class="col-3" style="height:100vh; overflow:hidden;">
 			<div class="container px-0">
@@ -33,7 +27,7 @@
 										<input type="text" class="form-control flex-grow-1 flex-shrink-1" id="rollConfig" value="1d20">
 										<div class="input-group-append">
 											<a href="#" id="rollHelp" class="input-group-text">?</a>
-											<button class="btn btn-primary desktop-throw">
+											<button class="btn btn-primary desktop-throw" id="desktop-throw" onclick="sound.play()">
 												<i class="fas fa-dice"></i>
 											</button>
 										</div>
@@ -180,9 +174,5 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js'></script>
 <script  src="{% static 'js/dado.js' %}"></script>
 
-
-
-</body>
-</html>
 
 {% endblock %}

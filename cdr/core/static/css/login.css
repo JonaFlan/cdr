@@ -63,8 +63,18 @@ h2 {
 }
 
 
-h2::before { left: 20px; }
-h2::after { right: 20px; }
+/* h2::before,
+h2::after {
+    content: "⚔️";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: clamp(1.2rem, 2vw, 2rem);
+}
+
+h2::before { left: 5%; }
+h2::after { right: 5%; } */
+
 
 /* Formulario */
 form {
