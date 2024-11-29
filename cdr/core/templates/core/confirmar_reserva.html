@@ -1,0 +1,47 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Confirmación de Reserva{% endblock %}
+
+{% block content %}
+<main class="container mt-5 p-4" style=" border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1);">
+    <h1 class="text-center mb-4">Confirmar Reserva</h1>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Información del juego -->
+            {% if juego.imagen %}
+                <img src="{{ juego.imagen.url }}" alt="{{ juego.nombre }}" class="img-fluid rounded" style="max-height: 300px; object-fit: contain;">
+            {% else %}
+                <img src="https://via.placeholder.com/200" alt="Imagen no disponible" class="img-fluid rounded">
+            {% endif %}
+            <h3 class="mt-3">{{ juego.nombre }}</h3>
+            <p>{{ juego.descripcion }}</p>
+        </div>
+        
+        <div class="col-md-6">
+            <!-- Términos y condiciones -->
+            <h4>Términos del Préstamo</h4>
+            <ul>
+                <li>El juego debe ser retirado el mismo día de la reserva.</li>
+                <li>La devolución debe realizarse en un plazo máximo de 3 días.</li>
+                <li>El horario de devolución es de lunes a viernes hasta las 16:00 horas en el DAE de la sede Inacap.</li>
+                <li>En caso de atraso en la devolución, se aplicará un cargo.</li>
+                <li>Si el juego resulta dañado o faltan piezas, se aplicará un cargo adicional.</li>
+            </ul>
+
+            <!-- Mostrar la fecha límite -->
+            <p><strong>Fecha límite para devolución:</strong> {{ fecha_devolucion }} a las 16:00 horas.</p>
+
+            <!-- Botón para confirmar -->
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-lg btn-block">Acepto los términos y confirmar reserva</button>
+            </form>
+
+            <!-- Botón para cancelar -->
+            <a href="{% url 'biblioteca' %}" class="btn btn-secondary btn-lg btn-block mt-2">Cancelar</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

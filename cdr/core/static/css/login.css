@@ -62,13 +62,6 @@ h2 {
     position: relative;
 }
 
-h2::before, h2::after {
-    content: "⚔️";
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.8em;
-}
 
 h2::before { left: 20px; }
 h2::after { right: 20px; }

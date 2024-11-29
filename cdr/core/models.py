@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from urllib.parse import urlparse, parse_qs
@@ -109,3 +110,21 @@ class Noticia(models.Model):
 
     def __str__(self):
         return self.titulo
+
+class Prestamo(models.Model):
+    ESTADO_CHOICES = [
+        ('RESERVADO', 'Reservado'),
+        ('PRESTADO', 'Prestado'),
+        ('FINALIZADO', 'Finalizado'),
+        ('CANCELADO', 'Cancelado'),
+    ]
+
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='prestamos')
+    juego = models.ForeignKey(Juego, on_delete=models.CASCADE, related_name='prestamos')
+    fecha_solicitud = models.DateTimeField(auto_now_add=True)
+    fecha_maxima_devolucion = models.DateField()  # Fecha límite calculada
+    fecha_real_devolucion = models.DateField(blank=True, null=True)  # Fecha en la que se devuelve
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='RESERVADO')
+
+    def __str__(self):
+        return f'Préstamo de {self.juego.nombre} por {self.usuario.username}'

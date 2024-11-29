@@ -1,8 +1,11 @@
+from datetime import timedelta, date
+from django.utils.timezone import now
+import calendar
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse_lazy
-from .models import Sesion, Juego, Noticia
+from .models import Sesion, Juego, Noticia, Prestamo
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
@@ -137,3 +140,73 @@ class NoticiaDeleteView(DeleteView):
     model = Noticia
     template_name = 'core/noticia_confirm_delete.html'
     success_url = reverse_lazy('noticias')
+
+@login_required
+def confirmar_reserva(request, pk):
+    juego = get_object_or_404(Juego, pk=pk)
+
+    if juego.estado != 'DISPONIBLE':
+        messages.error(request, 'Este juego no está disponible para préstamo.')
+        return redirect('biblioteca')
+    
+    # Verificar si el usuario ya tiene 2 préstamos activos
+    prestamos_activos = Prestamo.objects.filter(usuario=request.user).filter(estado__in=['RESERVADO', 'PRESTADO'])
+    if prestamos_activos.count() >= 2:
+        messages.error(request, "No puedes tener más de 2 préstamos activos al mismo tiempo.")
+        return redirect('biblioteca')  # Redirigir a la página de la biblioteca o donde sea apropiado
+    
+    # Calcular la fecha máxima de devolución (3 días hábiles)
+    fecha_hoy = now().date()
+    
+    # Caso especial: Si la reserva se hace miércoles o jueves, la fecha máxima será el viernes de esa misma semana
+    if fecha_hoy.weekday() == 2 or fecha_hoy.weekday() == 3:  # 2 = Miércoles, 3 = Jueves
+        fecha_maxima = fecha_hoy + timedelta(days=(4 - fecha_hoy.weekday()))  # Salta al viernes de la misma semana
+    else:
+        # Caso general: Si no es miércoles ni jueves, sumamos 3 días a la fecha actual
+        fecha_maxima = fecha_hoy + timedelta(days=3)
+
+    if request.method == 'POST':
+        # Crear el préstamo
+        prestamo = Prestamo.objects.create(
+            usuario=request.user,
+            juego=juego,
+            fecha_maxima_devolucion=fecha_maxima
+        )
+        juego.estado = 'RESERVADO'
+        juego.save()
+        print(prestamo.fecha_solicitud)
+        prestamo.save()
+        messages.success(request, 'Has aceptado los términos. El juego está reservado.')
+        return redirect('biblioteca')
+
+    return render(request, 'core/confirmar_reserva.html', {
+        'juego': juego,
+        'fecha_devolucion': fecha_maxima,
+        'horario_maximo': '16:00',
+        'ubicacion': 'DAE de la sede Inacap'
+    })
+
+
+def confirmar_devolucion(request, prestamo_id):
+    prestamo = get_object_or_404(Prestamo, pk=prestamo_id)
+
+    if prestamo.estado != 'PRESTADO':
+        messages.error(request, 'El préstamo no está activo.')
+        return redirect('prestamos')
+
+    fecha_actual = now().date()
+    prestamo.fecha_real_devolucion = fecha_actual
+    prestamo.estado = 'FINALIZADO'
+    prestamo.juego.estado = 'DISPONIBLE'
+    prestamo.juego.save()
+    prestamo.save()
+
+    # Notificar si la devolución fue fuera del plazo
+    if fecha_actual > prestamo.fecha_maxima_devolucion:
+        messages.warning(
+            request,
+            f'El juego fue devuelto tarde. Fecha máxima: {prestamo.fecha_maxima_devolucion}.'
+        )
+
+    messages.success(request, f'El juego "{prestamo.juego.nombre}" ha sido devuelto exitosamente.')
+    return redirect('prestamos')

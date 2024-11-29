@@ -6,7 +6,7 @@ from .views import (
     index, biblioteca, perfil, sesiones, 
     inscribirse_sesion, anular_inscripcion_sesion, 
     noticias, dado, herramientas, mapas, 
-    manuales, hojapj, ver_manual_juego
+    manuales, hojapj, ver_manual_juego, confirmar_reserva
 )
 
 
@@ -42,4 +42,5 @@ urlpatterns = [
     path('manuales/', manuales, name='manuales'),
     path('hojapj/', hojapj, name='hojapj'),
     path('manual/<int:juego_id>', ver_manual_juego, name='ver_manual_juego'),
+    path('reservar/<int:pk>/', confirmar_reserva, name="confirmar_reserva" )
 ]
