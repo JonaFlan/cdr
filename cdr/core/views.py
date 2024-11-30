@@ -1,5 +1,5 @@
-from datetime import timedelta, date
-from django.utils.timezone import now
+from datetime import timedelta
+from django.utils.timezone import now, localtime
 import calendar
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -210,3 +210,22 @@ def confirmar_devolucion(request, prestamo_id):
 
     messages.success(request, f'El juego "{prestamo.juego.nombre}" ha sido devuelto exitosamente.')
     return redirect('prestamos')
+
+def liberar_juegos_no_retirados(request):
+    """Libera juegos que no fueron retirados el mismo día."""
+    hoy = localtime(now()).date()
+
+    # Filtrar préstamos con fecha_reserva antes de hoy
+    reservas_vencidas = Prestamo.objects.filter(
+        estado='RESERVADO',
+        fecha_reserva__date__lt=hoy  # Menores a hoy (incluye ayer y anteriores)
+    )
+    print(reservas_vencidas[0])
+    for prestamo in reservas_vencidas:
+        prestamo.juego.estado = 'DISPONIBLE'
+        prestamo.juego.save()
+        prestamo.estado = 'CANCELADO'
+        prestamo.save()
+        print(f"Juego liberado: {prestamo.juego.nombre} (ID: {prestamo.juego.id})")
+        
+    return redirect('biblioteca')
