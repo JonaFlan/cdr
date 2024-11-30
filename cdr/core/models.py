@@ -125,6 +125,7 @@ class Prestamo(models.Model):
     fecha_maxima_devolucion = models.DateField()  # Fecha límite calculada
     fecha_real_devolucion = models.DateField(blank=True, null=True)  # Fecha en la que se devuelve
     estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='RESERVADO')
+    atrasado = models.BooleanField(default=False, null=True, blank=True)
 
     def __str__(self):
         return f'Préstamo de {self.juego.nombre} por {self.usuario.username}'

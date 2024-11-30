@@ -1,6 +1,7 @@
 from datetime import timedelta
+from django.db.models import Case, When, IntegerField
 from django.utils.timezone import now, localtime
-import calendar
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -9,6 +10,10 @@ from .models import Sesion, Juego, Noticia, Prestamo
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
+
+# Decorador para permitir solo a administradores
+def admin_required(user):
+    return user.is_staff
 
 # Create your views here.
 def hojapj(request):
@@ -141,6 +146,32 @@ class NoticiaDeleteView(DeleteView):
     template_name = 'core/noticia_confirm_delete.html'
     success_url = reverse_lazy('noticias')
 
+#PRESTAMOS
+def gestor_prestamos(request):
+    # Verificar si el usuario es admin
+    if request.user.is_staff:
+        # Si es administrador, devolver todos los préstamos
+        prestamos = Prestamo.objects.annotate(
+            prioridad=Case(
+                When(estado="RESERVADO", then=0),
+                When(estado="PRESTADO", then=1),
+                default=2,
+                output_field=IntegerField(),
+            )
+        ).order_by("prioridad", "fecha_solicitud")
+    else:
+        # Si es un usuario normal, devolver solo sus préstamos
+        prestamos = Prestamo.objects.filter(usuario=request.user).annotate(
+            prioridad=Case(
+                When(estado="RESERVADO", then=0),
+                When(estado="PRESTADO", then=1),
+                default=2,
+                output_field=IntegerField(),
+            )
+        ).order_by("prioridad", "fecha_solicitud")
+
+    return render(request, "core/gestor_prestamos.html", {"prestamos": prestamos})
+
 @login_required
 def confirmar_reserva(request, pk):
     juego = get_object_or_404(Juego, pk=pk)
@@ -187,30 +218,48 @@ def confirmar_reserva(request, pk):
     })
 
 
-def confirmar_devolucion(request, prestamo_id):
-    prestamo = get_object_or_404(Prestamo, pk=prestamo_id)
-
-    if prestamo.estado != 'PRESTADO':
-        messages.error(request, 'El préstamo no está activo.')
-        return redirect('prestamos')
-
-    fecha_actual = now().date()
-    prestamo.fecha_real_devolucion = fecha_actual
-    prestamo.estado = 'FINALIZADO'
-    prestamo.juego.estado = 'DISPONIBLE'
-    prestamo.juego.save()
+@user_passes_test(admin_required)
+def confirmar_retiro(request, pk):
+    prestamo = get_object_or_404(Prestamo, pk=pk, estado="RESERVADO")
+    prestamo.estado = "PRESTADO"
+    prestamo.juego.estado = "PRESTADO"
     prestamo.save()
+    prestamo.juego.save()
+    messages.success(request, f"El retiro del juego '{prestamo.juego.nombre}' fue confirmado.")
+    return redirect("gestor_prestamos")
+
+@user_passes_test(admin_required)
+def confirmar_devolucion(request, pk):
+    prestamo = get_object_or_404(Prestamo, pk=pk, estado="PRESTADO")
+    prestamo.estado = "FINALIZADO"
+    prestamo.juego.estado = "DISPONIBLE"
+    prestamo.fecha_real_devolucion = now()
+    prestamo.save()
+    prestamo.juego.save()
 
     # Notificar si la devolución fue fuera del plazo
-    if fecha_actual > prestamo.fecha_maxima_devolucion:
+    if prestamo.atrasado:
         messages.warning(
             request,
             f'El juego fue devuelto tarde. Fecha máxima: {prestamo.fecha_maxima_devolucion}.'
         )
 
-    messages.success(request, f'El juego "{prestamo.juego.nombre}" ha sido devuelto exitosamente.')
-    return redirect('prestamos')
+    messages.success(request, f"La devolución del juego '{prestamo.juego.nombre}' fue confirmada.")
+    return redirect("gestor_prestamos")
 
+@user_passes_test(admin_required)
+def cancelar_prestamo(request, pk):
+    prestamo = get_object_or_404(Prestamo, pk=pk)
+    
+    # Cambiar el estado a 'CANCELADO'
+    prestamo.estado = 'CANCELADO'
+    prestamo.save()
+    
+    messages.success(request, f"El préstamo del juego '{prestamo.juego.nombre}' ha sido cancelado por el administrador.")
+    
+    return redirect('gestor_prestamos')
+
+#TAREAS
 def liberar_juegos_no_retirados(request):
     """Libera juegos que no fueron retirados el mismo día."""
     hoy = localtime(now()).date()
@@ -220,7 +269,6 @@ def liberar_juegos_no_retirados(request):
         estado='RESERVADO',
         fecha_reserva__date__lt=hoy  # Menores a hoy (incluye ayer y anteriores)
     )
-    print(reservas_vencidas[0])
     for prestamo in reservas_vencidas:
         prestamo.juego.estado = 'DISPONIBLE'
         prestamo.juego.save()
