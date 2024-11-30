@@ -45,27 +45,40 @@
                     <a class="nav-link" href="{% url 'noticias' %}">Noticias</a>
                   </li>
                   {% if not user.is_authenticated %}
-                  <li class="nav-item">
-                      <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
-                  </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
+                      </li>
                   {% else %}
-                    <li class="nav-item">
-                      <a class="nav-link" href="{% url 'sesiones' %}">Sesiones</a>
-                    </li>
-                    <li class="nav-item dropdown ps-lg-3">
-                        <a class="nav-link dropdown-toggle p-0" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ user.perfil.imagen.url }}" alt="Perfil" class="rounded-circle" height="30" width="30">
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="{% url 'perfil' %}">Perfil</a></li>
-                            <li>
-                                <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
-                                    {% csrf_token %}
-                                </form>
-                                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>
-                            </li>
-                        </ul>
-                    </li>
+                      <li class="nav-item">
+                          <a class="nav-link" href="{% url 'sesiones' %}">Sesiones</a>
+                      </li>
+                      <li class="nav-item dropdown ps-lg-3 d-flex align-items-center">
+                          <a class="nav-link dropdown-toggle p-0" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              <!-- Nombre del usuario y su icono -->
+                              <span class="me-2 align-middle">{{ user.username }}</span>
+                              <img src="{{ user.perfil.imagen.url }}" alt="Perfil" class="rounded-circle" height="30" width="30">
+                          </a>
+                          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                              <li><a class="dropdown-item" href="{% url 'perfil' %}">Perfil</a></li>
+                  
+                              <!-- Mis préstamos: solo para usuarios normales -->
+                              {% if not user.is_staff %}
+                                  <li><a class="dropdown-item" href="{% url 'gestor_prestamos' %}">Mis préstamos</a></li>
+                              {% endif %}
+                  
+                              <!-- Gestor de préstamos: solo para administradores -->
+                              {% if user.is_staff %}
+                                  <li><a class="dropdown-item" href="{% url 'gestor_prestamos' %}">Gestor de préstamos</a></li>
+                              {% endif %}
+                  
+                              <li>
+                                  <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                                      {% csrf_token %}
+                                  </form>
+                                  <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Cerrar sesión</a>
+                              </li>
+                          </ul>
+                      </li>
                   {% endif %}
                 </ul>
               </div>
