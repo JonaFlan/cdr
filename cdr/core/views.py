@@ -148,28 +148,34 @@ class NoticiaDeleteView(DeleteView):
 
 #PRESTAMOS
 def gestor_prestamos(request):
-    # Verificar si el usuario es admin
     if request.user.is_staff:
-        # Si es administrador, devolver todos los préstamos
+        # Obtener todos los préstamos para el administrador
         prestamos = Prestamo.objects.annotate(
             prioridad=Case(
-                When(estado="RESERVADO", then=0),
-                When(estado="PRESTADO", then=1),
+                When(estado__in=["RESERVADO", "PRESTADO"], then=0),  # Préstamos vigentes
+                When(estado__in=["CANCELADO", "FINALIZADO"], then=1),  # Préstamos terminados
                 default=2,
                 output_field=IntegerField(),
             )
-        ).order_by("prioridad", "fecha_solicitud")
+        ).order_by(
+            "prioridad",  # Primero los vigentes
+            "fecha_solicitud",  # Orden ascendente para vigentes
+            "-fecha_real_devolucion"  # Orden descendente para finalizados/cancelados
+        )
     else:
-        # Si es un usuario normal, devolver solo sus préstamos
+        # Obtener solo los préstamos del usuario
         prestamos = Prestamo.objects.filter(usuario=request.user).annotate(
             prioridad=Case(
-                When(estado="RESERVADO", then=0),
-                When(estado="PRESTADO", then=1),
+                When(estado__in=["RESERVADO", "PRESTADO"], then=0),
+                When(estado__in=["CANCELADO", "FINALIZADO"], then=1),
                 default=2,
                 output_field=IntegerField(),
             )
-        ).order_by("prioridad", "fecha_solicitud")
-
+        ).order_by(
+            "prioridad",
+            "fecha_solicitud",
+            "-fecha_real_devolucion"
+        )
     return render(request, "core/gestor_prestamos.html", {"prestamos": prestamos})
 
 @login_required

@@ -29,13 +29,13 @@
         <table id="tablaPrestamos" class="table table-dark table-hover" style="background-color: #1A3B2A; border: 1px solid #A1C181;">
             <thead>
                 <tr>
-                    <th class="text-center">Usuario</th>
-                    <th class="text-center">Juego</th>
-                    <th class="text-center">Estado</th>
-                    <th class="text-center">Fecha Solicitud</th>
-                    <th class="text-center">Fecha Límite Devolución</th>
-                    <th class="text-center">Fecha Devolución</th>
-                    <th class="text-center">Atrasado</th>
+                    <th >Usuario</th>
+                    <th >Juego</th>
+                    <th >Estado</th>
+                    <th >Fecha Solicitud</th>
+                    <th >Fecha Límite Devolución</th>
+                    <th >Fecha Devolución</th>
+                    <th >Atrasado</th>
                     {% if user.is_staff %}
                         <th class="text-center">Acciones</th> <!-- Solo visible para administradores -->
                     {% endif %}
@@ -44,23 +44,23 @@
             <tbody>
                 {% for prestamo in prestamos %}
                 <tr>
-                    <td class="text-center">{{ prestamo.usuario.get_full_name }}</td>
-                    <td class="text-center">{{ prestamo.juego.nombre }}</td>
-                    <td class="text-center">
+                    <td >{{ prestamo.usuario.get_full_name }}</td>
+                    <td >{{ prestamo.juego.nombre }}</td>
+                    <td >
                         <span class="badge {% if prestamo.estado == 'RESERVADO' %}bg-warning{% elif prestamo.estado == 'PRESTADO' %}bg-success{% else %}bg-secondary{% endif %}">
                             {{ prestamo.get_estado_display }}
                         </span>
                     </td>
-                    <td class="text-center">{{ prestamo.fecha_solicitud|date:"d/m/y" }}</td>
-                    <td class="text-center">{{ prestamo.fecha_maxima_devolucion|date:"d/m/y" }}</td>
-                    <td class="text-center">
+                    <td >{{ prestamo.fecha_solicitud|date:"d/m/y" }}</td>
+                    <td >{{ prestamo.fecha_maxima_devolucion|date:"d/m/y" }}</td>
+                    <td >
                         {% if prestamo.fecha_real_devolucion %}
                             {{ prestamo.fecha_real_devolucion|date:"d/m/y" }}
                         {% else %}
-                            N/A
+                            Pendiente
                         {% endif %}
                     </td>
-                    <td class="text-center">
+                    <td >
                         {% if prestamo.atrasado %}
                             <span class="text-danger">Sí</span>
                         {% else %}
@@ -68,18 +68,33 @@
                         {% endif %}
                     </td>
                     {% if user.is_staff %}
-                        <td class="text-center">
+                        <td >
                             {% if prestamo.estado != "CANCELADO" and prestamo.estado != "FINALIZADO" %}
-                                <a href="{% url 'cancelar_prestamo' prestamo.id %}" class="btn btn-icon btn-sm btn-danger" title="Cancelar Préstamo">
-                                    <i class="fas fa-times" style="font-size: 1rem; "></i>
+                                <a href="#" class="btn btn-icon btn-sm btn-danger text-center" title="Cancelar Préstamo" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#confirmModal" 
+                                    data-message="¿Estás seguro de que deseas cancelar el préstamo de {{prestamo.usuario.get_full_name}} ({{prestamo.juego.nombre}})?" 
+                                    data-title="Cancelar Préstamo"
+                                    data-url="{% url 'cancelar_prestamo' prestamo.id %}">
+                                    <i class="fas fa-times" style="font-size: 1rem;"></i>
                                 </a>
                                 {% if prestamo.estado == "RESERVADO" %}
-                                    <a href="{% url 'confirmar_retiro' prestamo.id %}" class="btn btn-icon btn-sm btn-primary" title="Confirmar Retiro">
-                                        <i class="fas fa-box-open" style="font-size: 1rem; "></i>
+                                    <a href="#" class="btn btn-icon btn-sm btn-primary text-center" title="Confirmar Retiro" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#confirmModal" 
+                                        data-title="Confirmar Retiro"
+                                        data-message="¿Confirmas que {{prestamo.juego.nombre}} ha sido retirado?" 
+                                        data-url="{% url 'confirmar_retiro' prestamo.id %}">
+                                        <i class="fas fa-box-open" style="font-size: 1rem;"></i>
                                     </a>
                                 {% elif prestamo.estado == "PRESTADO" %}
-                                    <a href="{% url 'confirmar_devolucion' prestamo.id %}" class="btn btn-icon btn-sm btn-success" title="Confirmar Devolución">
-                                        <i class="fas fa-undo" style="font-size: 1rem; "></i>
+                                    <a href="#" class="btn btn-icon btn-sm btn-success text-center" title="Confirmar Devolución" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#confirmModal" 
+                                        data-title="Confirmar Devolución"
+                                        data-message="¿Confirmas que {{ prestamo.juego.nombre }} ha sido devuelto?" 
+                                        data-url="{% url 'confirmar_devolucion' prestamo.id %}">
+                                        <i class="fas fa-undo" style="font-size: 1rem;"></i>
                                     </a>
                                 {% endif %}
                             {% endif %}
@@ -113,7 +128,7 @@
                     {% if prestamo.fecha_real_devolucion %}
                         {{ prestamo.fecha_real_devolucion|date:"d/m/y" }}
                     {% else %}
-                        N/A
+                        Pendiente
                     {% endif %}<br>
                     <strong>Atrasado:</strong>
                     {% if prestamo.atrasado %}
@@ -122,20 +137,62 @@
                         <span class="text-success">No</span>
                     {% endif %}
                 </p>
+                {% if user.is_staff %}
                 <div class="d-flex justify-content-end">
-                    {% if prestamo.estado == "RESERVADO" %}
-                        <a href="{% url 'confirmar_retiro' prestamo.id %}" class="btn btn-primary btn-sm me-2" title="Confirmar Retiro">
-                            <i class="fas fa-box-open"></i>
+                    {% if prestamo.estado != "CANCELADO" and prestamo.estado != "FINALIZADO" %}
+                        <a href="#" class="btn btn-icon btn-sm btn-danger me-2" title="Cancelar Préstamo" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#confirmModal" 
+                            data-message="¿Estás seguro de que deseas cancelar el préstamo de {{prestamo.usuario.get_full_name}} ({{prestamo.juego.nombre}})?"
+                            data-title="Cancelar Préstamo"
+                            data-url="{% url 'cancelar_prestamo' prestamo.id %}">
+                            <i class="fas fa-times"></i>
                         </a>
-                    {% elif prestamo.estado == "PRESTADO" %}
-                        <a href="{% url 'confirmar_devolucion' prestamo.id %}" class="btn btn-success btn-sm" title="Confirmar Devolución">
-                            <i class="fas fa-undo"></i>
-                        </a>
+                        {% if prestamo.estado == "RESERVADO" %}
+                            <a href="#" class="btn btn-icon btn-sm btn-primary text-center" title="Confirmar Retiro" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#confirmModal" 
+                                data-message="¿Confirmas que {{prestamo.juego.nombre}} ha sido retirado?" 
+                                data-title="Confirmar Retiro"
+                                data-url="{% url 'confirmar_retiro' prestamo.id %}">
+                                <i class="fas fa-box-open" style="font-size: 1rem;"></i>
+                            </a>
+                        {% elif prestamo.estado == "PRESTADO" %}
+                            <a href="#" class="btn btn-icon btn-sm btn-success text-center" title="Confirmar Devolución" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#confirmModal" 
+                                data-message="¿Confirmas que el juego {{prestamo.juego.nombre}} ha sido devuelto?" 
+                                data-title="Confirmar Devolución"
+                                data-game-name="{{ prestamo.juego.nombre }}" 
+                                data-url="{% url 'confirmar_devolucion' prestamo.id %}">
+                                <i class="fas fa-undo" style="font-size: 1rem;"></i>
+                            </a>
+                        {% endif %}
                     {% endif %}
                 </div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
+    </div>
+</div>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content" style="background-color: #1A3B2A; color: #FFF; border: 1px solid #A1C181;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Título de la acción</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">¿Estás seguro de que deseas realizar esta acción con el juego <strong id="gameName"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="confirmActionBtn" href="#" class="btn btn-primary">Confirmar</a>
+            </div>
+        </div>
     </div>
 </div>
 
