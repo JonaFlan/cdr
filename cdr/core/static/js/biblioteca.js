@@ -9,7 +9,7 @@
         const nombreElement = document.getElementById('juegoNombre');
         nombreElement.textContent = juegoNombre;
 
-        // Actualizar el formulario de eliminación con la URL correcta
+        // Crear el formulario dinámicamente con el ID del juego
         const deleteForm = document.getElementById('deleteForm');
-        deleteForm.action = "{% url 'juego_eliminar' 0 %}".slice(0, -1) + juegoId + "/";
+        deleteForm.action = "/juegos/eliminar/0".replace('0', juegoId);
     });

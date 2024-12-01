@@ -66,9 +66,9 @@
                             <a href="{% url 'juego_editar' juego.id %}" class="btn btn-icon" title="Editar">
                                 <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
                             </a>
-                            <!-- Botón para eliminar juego con modal de confirmación -->
+                            <!-- Botón de eliminación con el id del juego -->
                             <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Eliminar"
-                                    data-id="{{ juego.id }}" data-nombre="{{ juego.nombre }}">
+                                data-id="{{ juego.id }}" data-nombre="{{ juego.nombre }}">
                                 <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
                             </button>
                         </div>
@@ -87,6 +87,7 @@
         </div>
         {% endif %}
     </div>
+
     <!-- Modal de confirmación para eliminar el juego -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
