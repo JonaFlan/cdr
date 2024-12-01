@@ -5,17 +5,25 @@
 {% block content %}
 <main class="container mt-5 p-3">
 
-    <ul class="list-group">
+    <ul class="row">
         {% for noticia in noticias %}
-            <li class="list-group-item mb-3" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
+        <li class="col-12 d-flex mb-3" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
+            <!-- Columna para la imagen -->
+            <div class="col-lg-4 col-md-4 p-0">
+                <img class="img-fluid h-100" src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}" style="object-fit: cover;">
+            </div>
+            
+            <!-- Columna para la noticia -->
+            <div class="col-lg-8 col-md-8 p-3">
                 <h3 style="color: #A1C181;">{{ noticia.titulo }}</h3>
                 <small class="" style="color: rgb(179, 178, 178)">{{ noticia.fecha_publicacion }}</small>
                 <p>{{ noticia.contenido }}</p>
-            </li>
+            </div>
+        </li>
         {% empty %}
-            <li class="list-group-item text-light" style="background-color: #0D1D13; border: 1px solid #1A3B2A;">
-                No hay noticias disponibles.
-            </li>
+        <li class="list-group-item text-light" style="background-color: #0D1D13; border: 1px solid #1A3B2A;">
+            No hay noticias disponibles.
+        </li>
         {% endfor %}
     </ul>
 </main>
