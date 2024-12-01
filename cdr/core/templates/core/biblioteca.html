@@ -5,6 +5,7 @@
 
 {% block custom %}
 <link rel="stylesheet" href="{% static 'css/biblioteca.css' %}">
+
 {% endblock %}
 
 {% block content %}
@@ -66,35 +67,12 @@
                                 <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
                             </a>
                             <!-- Botón para eliminar juego con modal de confirmación -->
-                            <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Eliminar">
+                            <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Eliminar"
+                                    data-id="{{ juego.id }}" data-nombre="{{ juego.nombre }}">
                                 <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
                             </button>
                         </div>
                     {% endif %}
-                </div>
-            </div>
-
-        <!-- Modal de confirmación para eliminar el juego -->
-            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content" style="background-color: #1A3B2A; color: #C8D6C3;">
-                        <div class="modal-header" style="border-bottom: 1px solid #A1C181;">
-                            <h5 class="modal-title" id="deleteModalLabel" style="color: #A1C181;">Confirmar eliminación</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            ¿Estás seguro de que deseas eliminar el juego "{{ juego.nombre }}" de la biblioteca? Esta acción no se puede deshacer.
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #6C757D; border: none;">Cancelar</button>
-                            
-                            <!-- Formulario POST para eliminar el juego -->
-                            <form method="POST" action="{% url 'juego_eliminar' juego.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger" style="background-color: #A1C181; border: none;">Eliminar</button>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -109,6 +87,30 @@
         </div>
         {% endif %}
     </div>
+    <!-- Modal de confirmación para eliminar el juego -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #1A3B2A; color: #C8D6C3;">
+                <div class="modal-header" style="border-bottom: 1px solid #A1C181;">
+                    <h5 class="modal-title" id="deleteModalLabel" style="color: #A1C181;">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar el juego "<span id="juegoNombre"></span>" de la biblioteca? Esta acción no se puede deshacer.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #6C757D; border: none;">Cancelar</button>
+                    
+                    <!-- Formulario POST para eliminar el juego -->
+                    <form method="POST" id="deleteForm">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" style="background-color: #A1C181; border: none;">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/biblioteca.js' %}"></script>
 </main>
 
 {% endblock %}
