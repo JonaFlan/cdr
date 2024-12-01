@@ -1,0 +1,62 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load form_filters %}
+
+{% block title %}{% if juego %}Editar {{ juego.nombre }}{% else %}Registrar un nuevo juego{% endif %}{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href="{% static 'css/biblioteca.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container mt-5 p-3">
+    <div class="card mx-auto shadow" style="max-width: 700px; background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
+        <div class="card-header text-center" style="background-color: #1A3B2A; color: #A1C181;">
+            <h2 class="m-0">{% if juego %}Editar {{ juego.nombre }} {% else %}Registrar un nuevo juego {% endif %}</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" class="needs-validation">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_nombre" class="form-label">Nombre del Juego:</label>
+                    {{ form.nombre|add_class:"form-control bg-dark text-light border-secondary" }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_proveedor" class="form-label">Proveedor:</label>
+                    {{ form.proveedor|add_class:"form-control bg-dark text-light border-secondary" }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_estado" class="form-label">Estado:</label>
+                    {{ form.estado|add_class:"form-select bg-dark text-light border-secondary" }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_imagen" class="form-label">Imagen:</label>
+                    {{ form.imagen|add_class:"form-control bg-dark text-light border-secondary" }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_descripcion" class="form-label">Descripción:</label>
+                    {{ form.descripcion|add_class:"form-control bg-dark text-light border-secondary" }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_video_tutorial" class="form-label">Video Tutorial:</label>
+                    {{ form.video_tutorial|add_class:"form-control bg-dark text-light border-secondary" }}
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="id_jugadores_min" class="form-label">Jugadores Mínimos:</label>
+                        {{ form.jugadores_min|add_class:"form-control bg-dark text-light border-secondary" }}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="id_jugadores_max" class="form-label">Jugadores Máximos:</label>
+                        {{ form.jugadores_max|add_class:"form-control bg-dark text-light border-secondary" }}
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a href="{% url 'biblioteca' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

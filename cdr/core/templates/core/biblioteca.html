@@ -9,7 +9,6 @@
 
 {% block content %}
 <main class="container mt-5 p-3 container-principal">
-    
     <div class="row">
         {% for message in messages %}
             <div class="col-12 mb-2">
@@ -48,7 +47,7 @@
                         {% endif %}
                     </div>
                     <!-- Imagen del juego -->
-                    <a href="{% url 'juego_detail' juego.pk %}">
+                    <a href="{% url 'juego_detalle' juego.id %}">
                         {% if juego.imagen %}
                             <img src="{{ juego.imagen.url }}" alt="{{ juego.nombre }}" class="card-img-top img-fluid" style="object-fit: contain; height: auto;">
                         {% else %}
@@ -60,6 +59,42 @@
                         <h5 class="card-title" style="color: #A1C181;">{{ juego.nombre }}</h5>
                         <p class="card-text">{{ juego.get_estado_display }}</p>
                     </div>
+                    <!-- Iconos de administrador -->
+                    {% if user.is_authenticated and user.is_staff %}
+                        <div class="card-footer d-flex justify-content-between" style="background-color: #1A3B2A; color: #C8D6C3;">
+                            <a href="{% url 'juego_editar' juego.id %}" class="btn btn-icon" title="Editar">
+                                <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
+                            </a>
+                            <!-- Botón para eliminar juego con modal de confirmación -->
+                            <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Eliminar">
+                                <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        <!-- Modal de confirmación para eliminar el juego -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content" style="background-color: #1A3B2A; color: #C8D6C3;">
+                        <div class="modal-header" style="border-bottom: 1px solid #A1C181;">
+                            <h5 class="modal-title" id="deleteModalLabel" style="color: #A1C181;">Confirmar eliminación</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ¿Estás seguro de que deseas eliminar el juego "{{ juego.nombre }}" de la biblioteca? Esta acción no se puede deshacer.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #6C757D; border: none;">Cancelar</button>
+                            
+                            <!-- Formulario POST para eliminar el juego -->
+                            <form method="POST" action="{% url 'juego_eliminar' juego.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger" style="background-color: #A1C181; border: none;">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -67,13 +102,13 @@
         {% if user.is_authenticated and user.is_staff %}
         <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
             <div class="card h-100 d-flex align-items-center justify-content-center game-card position-relative" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
-                <a href="" class="btn btn-icon d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; text-decoration: none;">
+                <a href="{% url 'juego_crear' %}" class="btn btn-icon d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; text-decoration: none;">
                     <i class="fas fa-plus" style="font-size: 3rem; color: #A1C181;" title="Agregar Juego"></i>
                 </a>
             </div>
         </div>
         {% endif %}
     </div>
-    
 </main>
+
 {% endblock %}

@@ -1,5 +1,6 @@
 from datetime import timedelta
 from django.db.models import Case, When, IntegerField
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.utils.timezone import now, localtime
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, get_object_or_404, redirect
@@ -52,26 +53,37 @@ def biblioteca(request):
 
 class JuegoDetailView(DetailView):
     model = Juego
-    template_name = 'core/juego_detail.html'
+    template_name = 'core/juego_detalle.html'
     context_object_name = 'juego'
 
-class JuegoCreateView(CreateView):
+# Crear un juego (solo administradores)
+class JuegoCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Juego
-    fields = ['nombre', 'proveedor', 'estado', 'imagen', 'descripcion', 'video']
-    template_name = 'core/juego_form.html'
+    fields = ['nombre', 'proveedor', 'estado', 'imagen', 'descripcion', 'video_tutorial', 'jugadores_min', 'jugadores_max']
+    template_name = 'core/juego_formulario.html'
     success_url = reverse_lazy('biblioteca')
 
-class JuegoUpdateView(UpdateView):
+    def test_func(self):
+        return self.request.user.is_staff  # Solo permite acceso a administradores
+
+# Editar un juego (solo administradores)
+class JuegoUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Juego
-    fields = ['nombre', 'proveedor', 'estado', 'imagen', 'descripcion', 'video']
-    template_name = 'core/juego_form.html'
+    fields = ['nombre', 'proveedor', 'estado', 'imagen', 'descripcion', 'video_tutorial', 'jugadores_min', 'jugadores_max']
+    template_name = 'core/juego_formulario.html'
     success_url = reverse_lazy('biblioteca')
 
-class JuegoDeleteView(DeleteView):
+    def test_func(self):
+        return self.request.user.is_staff  # Solo administradores
+
+# Eliminar un juego (solo administradores)
+class JuegoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Juego
-    template_name = 'juegos/juego_confirm_delete.html'
+    template_name = 'core/juego_confirmar_eliminar.html'
     success_url = reverse_lazy('biblioteca')
 
+    def test_func(self):
+        return self.request.user.is_staff  # Solo administradores
 
 
 # SESIONES
