@@ -11,5 +11,5 @@
 
         // Crear el formulario dinámicamente con el ID del juego
         const deleteForm = document.getElementById('deleteForm');
-        deleteForm.action = "/juegos/eliminar/0".replace('0', juegoId);
+        deleteForm.action = "/juegos/eliminar/0/".replace('0', juegoId);
     });
