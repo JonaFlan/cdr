@@ -94,6 +94,7 @@ class Sesion(models.Model):
     fecha = models.DateTimeField()
     capacidad_maxima = models.PositiveIntegerField()
     usuarios_inscritos = models.ManyToManyField(User, related_name='sesiones_inscritas', blank=True)
+    creador = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sesiones_creadas', blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Sesiones'
