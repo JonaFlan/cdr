@@ -8,3 +8,11 @@ body {
     color: white;
     font-family: 'Medieval', cursive;
 }
+
+p {
+    color: #C8D6C3;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #A1C181;
+}
