@@ -27,17 +27,16 @@
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="sesion-card">
                     <!-- Iconos de administrador -->
-                    {% if user.is_authenticated and user.is_staff %}
-                    <div class="card-footer d-flex justify-content-between mb-2" style="background-color: #1A3B2A; color: #C8D6C3;">
-                        <a href="{% url 'sesion_update' sesion.id %}" class="btn btn-icon" title="Editar">
-                            <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
-                        </a>
-                        <!-- Botón de eliminación con el id de la sesión -->
-                        <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Eliminar"
-                            data-id="{{ sesion.id }}" data-titulo="{{ sesion.titulo }}">
-                            <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
-                        </button>
-                    </div>
+                    {% if user.is_authenticated and sesion.creador == user %}
+                        <div class="card-footer d-flex justify-content-between mb-2" style="background-color: #1A3B2A; color: #C8D6C3;">
+                            <a href="{% url 'sesion_update' sesion.id %}" class="btn btn-icon" title="Editar">
+                                <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
+                            </a>
+                            <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Eliminar"
+                                data-id="{{ sesion.id }}" data-titulo="{{ sesion.titulo }}">
+                                <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
+                            </button>
+                        </div>
                     {% endif %}
                     <!-- Imagen del juego -->
                     {% if sesion.juego.imagen %}
@@ -75,7 +74,7 @@
 
 
         <!-- Tarjeta de agregar sesión -->
-        {% if user.is_authenticated and user.is_staff %}
+        {% if user.is_authenticated %}
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 d-flex align-items-center justify-content-center game-card position-relative" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
                 <a href="{% url 'sesion_create' %}" class="btn btn-icon d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; text-decoration: none;">

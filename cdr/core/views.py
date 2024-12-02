@@ -7,6 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 from .models import Sesion, Juego, Noticia, Prestamo
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -92,15 +93,15 @@ def sesiones(request):
     sesiones = Sesion.objects.all()
     return render(request, 'core/sesiones.html', {'sesiones': sesiones})
 
-from django.contrib.auth.models import User
-
 class SesionCreateView(CreateView):
     form_class = SesionForm
     template_name = 'core/sesion_form.html'
     success_url = reverse_lazy('sesiones')
-    
+
     def form_valid(self, form):
+        form.instance.creador = self.request.user
         form.instance.capacidad_maxima = form.instance.juego.jugadores_max
+
         response = super().form_valid(form)
 
         usuarios_ids = self.request.POST.getlist('usuarios_inscritos')
@@ -108,15 +109,14 @@ class SesionCreateView(CreateView):
             user = User.objects.get(id=user_id)
             form.instance.usuarios_inscritos.add(user)
 
+        messages.success(self.request, 'La sesión ha sido creada exitosamente.')  
+
         return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['usuarios'] = User.objects.all()
         return context
-
-    def test_func(self):
-        return self.request.user.is_staff
 
 
 class SesionUpdateView(UpdateView):
@@ -131,20 +131,45 @@ class SesionUpdateView(UpdateView):
             initial['fecha'] = localtime(self.object.fecha).strftime('%Y-%m-%dT%H:%M')
         return initial
 
+    def form_valid(self, form):
+        eliminar_usuarios = self.request.POST.getlist('eliminar_usuarios')
+        for usuario_id in eliminar_usuarios:
+            usuario = User.objects.get(id=usuario_id)
+            form.instance.usuarios_inscritos.remove(usuario)
+
+        response = super().form_valid(form)
+
+        usuarios_ids = self.request.POST.getlist('usuarios_inscritos')
+        for user_id in usuarios_ids:
+            user = User.objects.get(id=user_id)
+            if user not in form.instance.usuarios_inscritos.all():
+                form.instance.usuarios_inscritos.add(user)
+
+        messages.success(self.request, 'La sesión ha sido actualizada correctamente.')  
+
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['usuarios'] = User.objects.all()  
-        context['editar'] = True  
+        context['usuarios'] = User.objects.all()
         return context
-
 
 class SesionDeleteView(DeleteView):
     model = Sesion
     template_name = 'core/sesion_confirm_delete.html'
     success_url = reverse_lazy('sesiones')
-    
-    def test_func(self):
-        return self.request.user.is_staff
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        
+        if obj.creador != self.request.user:
+            messages.error(self.request, 'No tienes permiso para eliminar esta sesión.')
+            return redirect('sesiones')
+
+        messages.success(self.request, 'La sesión ha sido eliminada exitosamente.')
+        return super().delete(request, *args, **kwargs)
+
+
 
 @login_required
 def anular_inscripcion_sesion(request, sesion_id):
