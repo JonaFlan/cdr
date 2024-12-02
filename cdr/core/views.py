@@ -11,6 +11,7 @@ from .models import Sesion, Juego, Noticia, Prestamo
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
+from .forms import SesionForm
 
 # Decorador para permitir solo a administradores
 def admin_required(user):
@@ -26,7 +27,6 @@ def manuales(request):
 def ver_manual_juego(request, juego_id):
     juego = get_object_or_404(Juego, id=juego_id)
     return render(request, 'core/manual.html', {'juego': juego})
-
 
 def mapas(request):
     return render(request, 'core/mapas.html')
@@ -92,22 +92,59 @@ def sesiones(request):
     sesiones = Sesion.objects.all()
     return render(request, 'core/sesiones.html', {'sesiones': sesiones})
 
+from django.contrib.auth.models import User
+
 class SesionCreateView(CreateView):
-    model = Sesion
-    fields = ['juego', 'fecha', 'capacidad_maxima', 'usuarios_inscritos']
+    form_class = SesionForm
     template_name = 'core/sesion_form.html'
     success_url = reverse_lazy('sesiones')
+    
+    def form_valid(self, form):
+        form.instance.capacidad_maxima = form.instance.juego.jugadores_max
+        response = super().form_valid(form)
+
+        usuarios_ids = self.request.POST.getlist('usuarios_inscritos')
+        for user_id in usuarios_ids:
+            user = User.objects.get(id=user_id)
+            form.instance.usuarios_inscritos.add(user)
+
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['usuarios'] = User.objects.all()
+        return context
+
+    def test_func(self):
+        return self.request.user.is_staff
+
 
 class SesionUpdateView(UpdateView):
     model = Sesion
-    fields = ['juego', 'fecha', 'capacidad_maxima', 'usuarios_inscritos']
+    form_class = SesionForm
     template_name = 'core/sesion_form.html'
     success_url = reverse_lazy('sesiones')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        if self.object.fecha:
+            initial['fecha'] = localtime(self.object.fecha).strftime('%Y-%m-%dT%H:%M')
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['usuarios'] = User.objects.all()  
+        context['editar'] = True  
+        return context
+
 
 class SesionDeleteView(DeleteView):
     model = Sesion
     template_name = 'core/sesion_confirm_delete.html'
     success_url = reverse_lazy('sesiones')
+    
+    def test_func(self):
+        return self.request.user.is_staff
 
 @login_required
 def anular_inscripcion_sesion(request, sesion_id):

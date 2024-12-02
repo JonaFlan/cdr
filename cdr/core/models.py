@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from urllib.parse import urlparse, parse_qs
+from django.utils.timezone import localtime
 
 # Create your models here.
 
@@ -102,6 +103,10 @@ class Sesion(models.Model):
 
     def cupos_disponibles(self):
         return self.capacidad_maxima - self.usuarios_inscritos.count()
+    
+    def titulo(self):
+        fecha_formateada = localtime(self.fecha).strftime("%d/%m/%Y %H:%M")
+        return f'{self.juego.nombre} - {fecha_formateada}'
 
 class Noticia(models.Model):
     titulo = models.CharField(max_length=200)
