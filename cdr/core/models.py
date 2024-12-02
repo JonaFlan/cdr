@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
 from urllib.parse import urlparse, parse_qs
+from django.utils.timezone import localtime
 
 # Create your models here.
 
@@ -96,6 +97,7 @@ class Sesion(models.Model):
     fecha = models.DateTimeField()
     capacidad_maxima = models.PositiveIntegerField()
     usuarios_inscritos = models.ManyToManyField(User, related_name='sesiones_inscritas', blank=True)
+    creador = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sesiones_creadas', blank=True, null=True)
 
     class Meta:
         verbose_name_plural = 'Sesiones'
@@ -105,13 +107,17 @@ class Sesion(models.Model):
 
     def cupos_disponibles(self):
         return self.capacidad_maxima - self.usuarios_inscritos.count()
+    
+    def titulo(self):
+        fecha_formateada = localtime(self.fecha).strftime("%d/%m/%Y %H:%M")
+        return f'{self.juego.nombre} - {fecha_formateada}'
 
 class Noticia(models.Model):
     titulo = models.CharField(max_length=200)
     contenido = models.TextField()
     fecha_publicacion = models.DateField(auto_now_add=True)
     imagen = models.ImageField(upload_to='noticias/', blank=True, null=True)
-    autor= models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
+    autor = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
 
     def __str__(self):
         return self.titulo

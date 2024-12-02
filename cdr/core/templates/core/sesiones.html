@@ -26,6 +26,18 @@
         {% for sesion in sesiones %}
             <div class="col-md-6 col-lg-4 mb-4">
                 <div class="sesion-card">
+                    <!-- Iconos de administrador -->
+                    {% if user.is_authenticated and sesion.creador == user %}
+                        <div class="card-footer d-flex justify-content-between mb-2" style="background-color: #1A3B2A; color: #C8D6C3;">
+                            <a href="{% url 'sesion_update' sesion.id %}" class="btn btn-icon" title="Editar">
+                                <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
+                            </a>
+                            <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Eliminar"
+                                data-id="{{ sesion.id }}" data-titulo="{{ sesion.titulo }}">
+                                <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
+                            </button>
+                        </div>
+                    {% endif %}
                     <!-- Imagen del juego -->
                     {% if sesion.juego.imagen %}
                         <img src="{{ sesion.juego.imagen.url }}" alt="{{ sesion.juego.nombre }}" class="img-fluid w-100">
@@ -34,7 +46,7 @@
                     {% endif %}
                     <!-- Detalles de la sesión -->
                     <div class="sesion-card-body text-center">
-                        <h5 class="sesion-card-title">{{ sesion.titulo }}</h5>
+                        <!-- <h5 class="sesion-card-title">{{ sesion.titulo }}</h5> -->
                         <p class="sesion-card-text"><strong>Juego:</strong> {{ sesion.juego.nombre }}</p>
                         <p class="sesion-card-text"><strong>Fecha:</strong> {{ sesion.fecha }}</p>
                         <p class="sesion-card-text">{{ sesion.descripcion }}</p>
@@ -54,10 +66,64 @@
                         {% else %}
                             <a href="{% url 'inscribirse_sesion' sesion.id %}" class="btn btn-dark-gothic btn-sm my-2">Inscribirse</a>
                         {% endif %}
+
                     </div>
                 </div>
             </div>
         {% endfor %}
+
+
+        <!-- Tarjeta de agregar sesión -->
+        {% if user.is_authenticated %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 d-flex align-items-center justify-content-center game-card position-relative" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
+                <a href="{% url 'sesion_create' %}" class="btn btn-icon d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; text-decoration: none;">
+                    <i class="fas fa-plus" style="font-size: 3rem; color: #A1C181;" title="Agregar Sesion"></i>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <!-- Modal de confirmación para eliminar la sesión -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #1A3B2A; color: #C8D6C3;">
+                <div class="modal-header" style="border-bottom: 1px solid #A1C181;">
+                    <h5 class="modal-title" id="deleteModalLabel" style="color: #A1C181;">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar la sesión "<span id="sesionTitulo"></span>"?. Esta acción no se puede deshacer.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #6C757D; border: none;">Cancelar</button>
+                    
+                    <!-- Formulario POST para eliminar la sesión -->
+                    <form method="POST" id="deleteForm">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" style="background-color: #A1C181; border: none;">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
+
+<script>
+    const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Botón que activó el modal
+        const sesionId = button.getAttribute('data-id');
+        const sesionTitulo = button.getAttribute('data-titulo');
+        
+        // Actualizar el título de la sesión en el modal
+        const tituloElement = document.getElementById('sesionTitulo');
+        tituloElement.textContent = sesionTitulo;
+    
+        // Crear el formulario dinámicamente con el ID de la sesión
+        const deleteForm = document.getElementById('deleteForm');
+        deleteForm.action = "/sesiones/eliminar/0/".replace('0', sesionId);
+    });
+</script>
+    
 {% endblock %}

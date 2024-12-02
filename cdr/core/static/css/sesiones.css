@@ -1,19 +1,51 @@
+/* Encabezado de herramientas */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1A3B2A; /* Color consistente con biblioteca */
+    color: #C8D6C3; /* Texto claro */
+    padding: 0.5rem; /* Espaciado interior uniforme */
+    min-height: 3rem; /* Altura mínima */
+}
+
+/* Íconos de herramientas */
+.card-footer .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem; /* Tamaño consistente */
+    height: 2rem; /* Tamaño consistente */
+    font-size: 1.5rem; /* Tamaño de ícono */
+    color: #A1C181; /* Color verde claro para los íconos */
+    transition: transform 0.2s ease;
+}
+
+.card-footer .btn-icon:hover {
+    transform: scale(1.2); /* Efecto hover */
+    color: #86a06b; /* Color más claro al pasar el mouse */
+}
+
+/* Ajuste general para las tarjetas */
 .sesion-card {
-    background-color: #0D1D13; /* Fondo oscuro */
+    background-color: #0D1D13; /* Fondo oscuro consistente con biblioteca */
     border: 1px solid #1A3B2A; /* Borde verde oscuro */
+    color: #C8D6C3; /* Texto claro */
     border-radius: 8px;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    color: #C8D6C3; /* Texto claro */
 }
 
 .sesion-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra en hover */
+    transform: scale(1.05); /* Efecto hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra al pasar el mouse */
 }
 
-/* Imagen */
+/* Imagen del juego */
 .sesion-card img {
+    object-fit: contain;
+    height: 200px; /* Ajustar altura para que sea consistente */
+    width: 100%;
     border-bottom: 1px solid #1A3B2A;
 }
 
@@ -25,6 +57,7 @@
 .sesion-card-title {
     color: #A1C181; /* Verde claro para los títulos */
     font-size: 1.2em;
+    margin-bottom: 0.5rem;
 }
 
 .sesion-card-text {
@@ -51,4 +84,37 @@
     background-color: #1a1a1a;
     border-color: #f8f9fa;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Ajuste general para los usuarios inscritos */
+.inscritos-img img {
+    border-radius: 50%;
+    margin: 0 5px;
+    border: 1px solid #A1C181; /* Borde consistente */
+    width: 30px;
+    height: 30px;
+}
+
+/* Modal estilos */
+.modal-content {
+    background-color: #1A3B2A; /* Fondo oscuro */
+    color: #C8D6C3; /* Texto claro */
+}
+
+.modal-header {
+    border-bottom: 1px solid #A1C181; /* Línea verde claro */
+}
+
+.modal-title {
+    color: #A1C181; /* Verde claro para el título */
+}
+
+.modal-footer button {
+    background-color: #6C757D; /* Gris para cancelar */
+    border: none;
+}
+
+.modal-footer .btn-danger {
+    background-color: #A1C181; /* Verde claro para eliminar */
+    border: none;
 }

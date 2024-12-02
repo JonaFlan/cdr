@@ -9,32 +9,10 @@ body {
     font-family: 'Medieval', cursive;
 }
 
-.btn-dark-gothic {
-    background-color: #2c2c2c; /* Color oscuro de fondo */
-    color: #f8f9fa; /* Color claro del texto */
-    border: 2px solid #4d4d4d; /* Borde más oscuro */
-    padding: 10px 20px;
-    border-radius: 5px;
-    font-family: 'Garamond', serif; /* Fuente más gótica */
-    font-size: 1.2em;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra */
+p {
+    color: #C8D6C3;
 }
 
-.btn-dark-gothic:hover {
-    background-color: #1a1a1a; /* Color de fondo más oscuro al pasar el mouse */
-    border-color: #f8f9fa; /* Borde más claro al pasar el mouse */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7); /* Sombra más intensa */
+h1, h2, h3, h4, h5, h6 {
+    color: #A1C181;
 }
-
-.btn-dark-gothic:active {
-    background-color: #0d0d0d; /* Color de fondo aún más oscuro al hacer clic */
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.9); /* Sombra más pequeña al hacer clic */
-}
-
-.btn-dark-gothic:focus {
-    outline: none; /* Sin borde de enfoque */
-}
-

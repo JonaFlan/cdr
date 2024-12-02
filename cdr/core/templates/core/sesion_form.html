@@ -1,0 +1,95 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if object.pk %}Editar Sesión{% else %}Crear Sesión{% endif %}
+{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href="{% static 'css/sesiones.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container mt-5 p-3">
+    <div class="card mx-auto shadow" style="max-width: 700px; background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
+        <div class="card-header text-center" style="background-color: #1A3B2A; color: #A1C181;">
+            <h2 class="m-0">
+                {% if object.pk %}Editar Sesión{% else %}Registrar Nueva Sesión{% endif %}
+            </h2>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" class="needs-validation">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <!-- Juego -->
+                <div class="mb-3">
+                    <label for="id_juego" class="form-label">Juego:</label>
+                    {{ form.juego }}
+                </div>
+
+                <!-- Fecha -->
+                <div class="mb-3">
+                    <label for="id_fecha" class="form-label">Fecha:</label>
+                    {{ form.fecha }}
+                </div>
+
+                <!-- Capacidad máxima -->
+                <div class="mb-3">
+                    <label for="id_capacidad_maxima" class="form-label">Capacidad Máxima:</label>
+                    {{ form.capacidad_maxima }}
+                </div>
+<!-- 
+                {% if object.pk %}
+                <div class="mb-3">
+                    <label class="form-label">Usuarios Inscritos:</label>
+                    <div id="usuarios-inscritos" class="usuarios-lista">
+                        {% for usuario in object.usuarios_inscritos.all %}
+                            <div class="usuario-item d-flex align-items-center mb-2">
+                                <input type="checkbox" id="inscrito_{{ usuario.id }}" name="eliminar_usuarios_{{ usuario.id }}" value="{{ usuario.id }}" class="usuario-checkbox me-2">
+                                <label for="inscrito_{{ usuario.id }}" class="usuario-label d-flex align-items-center">
+                                    <img src="{{ usuario.perfil.imagen.url }}" alt="{{ usuario.username }}" class="usuario-imagen me-2" style="width: 40px; height: 40px; border-radius: 50%;">
+                                    {{ usuario.username }}
+                                </label>
+                                <i class="fas fa-user-minus text-danger ms-auto" title="Eliminar de la sesión"></i>
+                            </div>
+                        {% empty %}
+                            <p>No hay usuarios inscritos aún.</p>
+                        {% endfor %}
+                    </div>
+                    <small class="form-text text-muted">Marca los usuarios que deseas eliminar de la sesión.</small>
+                </div>
+                {% endif %}
+
+
+                <div class="mb-3">
+                    <label for="id_usuarios_inscritos" class="form-label">Añadir Nuevos Usuarios:</label>
+                    <div id="usuarios-lista" class="usuarios-lista">
+                        {% for usuario in usuarios %}
+                            {% if not object.pk or usuario not in object.usuarios_inscritos.all %}
+                                <div class="usuario-item d-flex align-items-center mb-2">
+                                    <input type="checkbox" id="usuario_{{ usuario.id }}" name="usuarios_inscritos" value="{{ usuario.id }}" class="usuario-checkbox me-2">
+                                    <label for="usuario_{{ usuario.id }}" class="usuario-label d-flex align-items-center">
+                                        <img src="{{ usuario.perfil.imagen.url }}" alt="{{ usuario.username }}" class="usuario-imagen me-2" style="width: 40px; height: 40px; border-radius: 50%;">
+                                        {{ usuario.username }}
+                                    </label>
+                                    <i class="fas fa-user-plus text-success ms-auto" title="Añadir a la sesión"></i>
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <p>No hay usuarios para añadir.</p>
+                        {% endfor %}
+                    </div>
+                    <small class="form-text text-muted">Selecciona los usuarios para agregar a la sesión.</small>
+                </div>
+-->
+                <!-- Botones de acción -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a href="{% url 'sesiones' %}" class="btn btn-secondary">Cancelar</a>
+                </div>                
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

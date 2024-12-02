@@ -28,17 +28,17 @@ urlpatterns = [
     # CRUD de SESIONES
     path('sesiones/', sesiones, name='sesiones'),
     path('sesiones/crear/', SesionCreateView.as_view(), name='sesion_create'),
-    path('sesiones/editar/<int:pk>', SesionUpdateView.as_view(), name='sesion_update'),
-    path('sesiones//eliminar/<int:pk>', SesionDeleteView.as_view(), name='sesion_delete'),
+    path('sesiones/editar/<int:pk>/', SesionUpdateView.as_view(), name='sesion_update'),
+    path('sesiones/eliminar/<int:pk>/', SesionDeleteView.as_view(), name='sesion_delete'),
     path('sesiones/anular_inscripcion/<int:sesion_id>/', anular_inscripcion_sesion, name='anular_inscripcion_sesion'),
     path('inscribirse/<int:sesion_id>/', inscribirse_sesion, name='inscribirse_sesion'),
 
     # CRUD de Noticias
     path('noticias/', noticias, name='noticias'),
-    path('noticias/crear/', NoticiaCreateView.as_view(), name='noticia_create'),
-    path('noticias/<int:pk>/', NoticiaDetailView.as_view(), name='noticia_detail'),
-    path('noticias/editar/<int:pk>', NoticiaUpdateView.as_view(), name='noticia_update'),
-    path('noticias/eliminar/<int:pk>', NoticiaDeleteView.as_view(), name='noticia_delete'),
+    path('noticias/crear/', NoticiaCreateView.as_view(), name='noticia_crear'),
+    path('noticias/<int:pk>/', NoticiaDetailView.as_view(), name='noticia_detalle'),
+    path('noticias/editar/<int:pk>', NoticiaUpdateView.as_view(), name='noticia_editar'),
+    path('noticias/eliminar/<int:pk>', NoticiaDeleteView.as_view(), name='noticia_eliminar'),
     
     # PRESTAMOS
     path('reservar/<int:pk>/', confirmar_reserva, name="confirmar_reserva" ),

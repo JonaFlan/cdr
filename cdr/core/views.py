@@ -7,6 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.contrib.auth.models import User
 from .models import Sesion, Juego, Noticia, Prestamo
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -127,7 +128,6 @@ def ver_manual_juego(request, juego_id):
     juego = get_object_or_404(Juego, id=juego_id)
     return render(request, 'core/manual.html', {'juego': juego})
 
-
 def mapas(request):
     return render(request, 'core/mapas.html')
 
@@ -222,21 +222,82 @@ def sesiones(request):
     return render(request, 'core/sesiones.html', {'sesiones': sesiones})
 
 class SesionCreateView(CreateView):
-    model = Sesion
-    fields = ['juego', 'fecha', 'capacidad_maxima', 'usuarios_inscritos']
+    form_class = SesionForm
     template_name = 'core/sesion_form.html'
     success_url = reverse_lazy('sesiones')
 
+    def form_valid(self, form):
+        form.instance.creador = self.request.user
+        form.instance.capacidad_maxima = form.instance.juego.jugadores_max
+
+        response = super().form_valid(form)
+
+        usuarios_ids = self.request.POST.getlist('usuarios_inscritos')
+        for user_id in usuarios_ids:
+            user = User.objects.get(id=user_id)
+            form.instance.usuarios_inscritos.add(user)
+
+        messages.success(self.request, 'La sesión ha sido creada exitosamente.')  
+
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['usuarios'] = User.objects.all()
+        return context
+
+
 class SesionUpdateView(UpdateView):
     model = Sesion
-    fields = ['juego', 'fecha', 'capacidad_maxima', 'usuarios_inscritos']
+    form_class = SesionForm
     template_name = 'core/sesion_form.html'
     success_url = reverse_lazy('sesiones')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        if self.object.fecha:
+            initial['fecha'] = localtime(self.object.fecha).strftime('%Y-%m-%dT%H:%M')
+        return initial
+
+    def form_valid(self, form):
+        eliminar_usuarios = self.request.POST.getlist('eliminar_usuarios')
+        for usuario_id in eliminar_usuarios:
+            usuario = User.objects.get(id=usuario_id)
+            form.instance.usuarios_inscritos.remove(usuario)
+
+        response = super().form_valid(form)
+
+        usuarios_ids = self.request.POST.getlist('usuarios_inscritos')
+        for user_id in usuarios_ids:
+            user = User.objects.get(id=user_id)
+            if user not in form.instance.usuarios_inscritos.all():
+                form.instance.usuarios_inscritos.add(user)
+
+        messages.success(self.request, 'La sesión ha sido actualizada correctamente.')  
+
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['usuarios'] = User.objects.all()
+        return context
 
 class SesionDeleteView(DeleteView):
     model = Sesion
     template_name = 'core/sesion_confirm_delete.html'
     success_url = reverse_lazy('sesiones')
+
+    def delete(self, request, *args, **kwargs):
+        obj = self.get_object()
+        
+        if obj.creador != self.request.user:
+            messages.error(self.request, 'No tienes permiso para eliminar esta sesión.')
+            return redirect('sesiones')
+
+        messages.success(self.request, 'La sesión ha sido eliminada exitosamente.')
+        return super().delete(request, *args, **kwargs)
+
+
 
 @login_required
 def anular_inscripcion_sesion(request, sesion_id):
@@ -270,22 +331,52 @@ class NoticiaDetailView(DetailView):
     template_name = 'core/noticia_detail.html'
     context_object_name = 'noticia'
 
-class NoticiaCreateView(CreateView):
+class NoticiaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Noticia
-    fields = ['titulo', 'contenido']
-    template_name = 'core/noticia_form.html'
+    fields = ['titulo', 'contenido', 'imagen']
+    template_name = 'core/noticia_formulario.html'
     success_url = reverse_lazy('noticias')
 
-class NoticiaUpdateView(UpdateView):
+    def form_valid(self, form):
+        form.instance.autor = self.request.user
+        messages.success(self.request, 'La noticia ha sido creada exitosamente.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Hubo un error al intentar crear la noticia. Por favor, verifica los datos.')
+        return super().form_invalid(form)
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+class NoticiaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Noticia
-    fields = ['titulo', 'contenido']
-    template_name = 'core/noticia_form.html'
+    fields = ['titulo', 'contenido', 'imagen']
+    template_name = 'core/noticia_formulario.html'
     success_url = reverse_lazy('noticias')
 
-class NoticiaDeleteView(DeleteView):
+    def form_valid(self, form):
+        messages.success(self.request, 'La noticia ha sido actualizada exitosamente.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Hubo un error al actualizar la noticia. Por favor, verifica los datos.')
+        return super().form_invalid(form)
+    
+    def test_func(self):
+        return self.request.user.is_staff
+
+class NoticiaDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Noticia
-    template_name = 'core/noticia_confirm_delete.html'
+    template_name = 'core/noticia_confirmar_eliminar.html'  # No es necesario porque usamos el modal
     success_url = reverse_lazy('noticias')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, 'La noticia ha sido eliminada correctamente.')
+        return super().delete(request, *args, **kwargs)
+    
+    def test_func(self):
+        return self.request.user.is_staff
 
 #PRESTAMOS
 def gestor_prestamos(request):

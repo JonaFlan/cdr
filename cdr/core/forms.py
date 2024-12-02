@@ -1,7 +1,22 @@
 from django import forms
-import os
-from django.conf import settings
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from .models import Perfil
+from .models import Sesion
+
+class UserRegisterForm(UserCreationForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
 
 class ProfileUpdateForm(forms.ModelForm):
     imagen = forms.ChoiceField(
@@ -14,20 +29,16 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Perfil
         fields = ['imagen']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Obtener imágenes predefinidas desde un directorio estático
-        imagenes_path = None
-        for directory in settings.STATICFILES_DIRS:
-            posible_path = os.path.join(directory, 'perfil_imagenes')
-            if os.path.exists(posible_path):
-                imagenes_path = posible_path
-                break
-
-        if imagenes_path:
-            imagenes = [
-                (f'perfil_imagenes/{nombre}', nombre) for nombre in os.listdir(imagenes_path) if nombre.endswith(('png', 'jpg', 'jpeg'))
-            ]
-            self.fields['imagen'].choices = imagenes
-        else:
-            self.fields['imagen'].choices = []
+class SesionForm(forms.ModelForm):
+    class Meta:
+        model = Sesion
+        fields = ['juego', 'fecha', 'capacidad_maxima', 'usuarios_inscritos']
+        widgets = {
+            'juego': forms.Select(attrs={'class': 'form-control bg-dark text-light border-secondary'}),
+            'fecha': forms.DateTimeInput(attrs={
+                'type': 'datetime-local',
+                'class': 'form-control bg-dark text-light border-secondary'
+            }),
+            'capacidad_maxima': forms.NumberInput(attrs={'class': 'form-control bg-dark text-light border-secondary'}),
+            'usuarios_inscritos': forms.SelectMultiple(attrs={'class': 'form-control bg-dark text-light border-secondary'}),
+        }

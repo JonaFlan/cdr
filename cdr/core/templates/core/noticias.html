@@ -1,30 +1,102 @@
 {% extends "core/base.html" %}
+{% load static %}
 
 {% block title %}Noticias{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href="{% static 'css/noticias.css' %}">
+{% endblock %}
 
 {% block content %}
 <main class="container mt-5 p-3">
 
-    <ul class="row">
+    {% if messages %}
+    <div class="container mt-3">
+        <div class="row">
+            {% for message in messages %}
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% endif %}
+    <!-- Botón de Agregar Noticias -->
+    {% if user.is_authenticated and user.is_staff %}
+    <div class="mb-2 text-end">
+        <a href="{% url 'noticia_crear' %}" class="btn btn-icon">
+            <i class="fas fa-plus" style="font-size: 1.5rem; color: #A1C181;" title="Agregar Noticia"></i>
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="row g-4">
         {% for noticia in noticias %}
-        <li class="col-12 d-flex mb-3" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
-            <!-- Columna para la imagen -->
-            <div class="col-lg-4 col-md-4 p-0">
-                <img class="img-fluid h-100" src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}" style="object-fit: cover;">
+        <div class="col-lg-12">
+            <div class="d-flex flex-column flex-md-row noticia-card">
+                <!-- Columna para la imagen -->
+                <div class="col-md-4 p-0 d-flex align-items-stretch">
+                    <img class="noticia-imagen" src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
+                </div>
+
+                <!-- Columna para la noticia -->
+                <div class="col-md-8 p-3 d-flex flex-column justify-content-between">
+                    <div>
+                        <h3 class="noticia-titulo">{{ noticia.titulo }}</h3>
+                        <small class="noticia-fecha">
+                            {{ noticia.fecha_publicacion }} | <span class="noticia-autor">{{ noticia.autor.get_full_name }}</span>
+                        </small>
+                        <p class="noticia-contenido">{{ noticia.contenido }}</p>
+                    </div>
+
+                    <!-- Iconos de administrador -->
+                    {% if user.is_authenticated and user.is_staff %}
+                    <div class="text-end mt-2">
+                        <a href="{% url 'noticia_editar' noticia.id %}" class="btn btn-icon" title="Editar">
+                            <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
+                        </a>
+                        <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Eliminar"
+                            data-id="{{ noticia.id }}" data-titulo="{{ noticia.titulo }}">
+                            <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
-            
-            <!-- Columna para la noticia -->
-            <div class="col-lg-8 col-md-8 p-3">
-                <h3 style="color: #A1C181;">{{ noticia.titulo }}</h3>
-                <small class="" style="color: rgb(179, 178, 178)">{{ noticia.fecha_publicacion }}</small>
-                <p>{{ noticia.contenido }}</p>
-            </div>
-        </li>
+        </div>
         {% empty %}
-        <li class="list-group-item text-light" style="background-color: #0D1D13; border: 1px solid #1A3B2A;">
-            No hay noticias disponibles.
-        </li>
+        <div class="col-12 text-center text-light">
+            <div class="noticia-card p-4">
+                No hay noticias disponibles.
+            </div>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
+
+    <!-- Modal de confirmación para eliminar la noticia -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="background-color: #1A3B2A; color: #C8D6C3;">
+                <div class="modal-header" style="border-bottom: 1px solid #A1C181;">
+                    <h5 class="modal-title" id="deleteModalLabel" style="color: #A1C181;">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar la noticia "<span id="noticiaTitulo"></span>"? Esta acción no se puede deshacer.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #6C757D; border: none;">Cancelar</button>
+                    <!-- Formulario POST para eliminar la noticia -->
+                    <form method="POST" id="deleteForm">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" style="background-color: #A1C181; border: none;">Eliminar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/noticias.js' %}"></script>
 </main>
 {% endblock %}
