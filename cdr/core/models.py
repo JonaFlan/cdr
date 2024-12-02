@@ -108,7 +108,7 @@ class Noticia(models.Model):
     contenido = models.TextField()
     fecha_publicacion = models.DateField(auto_now_add=True)
     imagen = models.ImageField(upload_to='noticias/', blank=True, null=True)
-    autor= models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
+    autor = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
 
     def __str__(self):
         return self.titulo

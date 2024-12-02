@@ -32,10 +32,10 @@ urlpatterns = [
 
     # CRUD de Noticias
     path('noticias/', noticias, name='noticias'),
-    path('noticias/crear/', NoticiaCreateView.as_view(), name='noticia_create'),
-    path('noticias/<int:pk>/', NoticiaDetailView.as_view(), name='noticia_detail'),
-    path('noticias/editar/<int:pk>', NoticiaUpdateView.as_view(), name='noticia_update'),
-    path('noticias/eliminar/<int:pk>', NoticiaDeleteView.as_view(), name='noticia_delete'),
+    path('noticias/crear/', NoticiaCreateView.as_view(), name='noticia_crear'),
+    path('noticias/<int:pk>/', NoticiaDetailView.as_view(), name='noticia_detalle'),
+    path('noticias/editar/<int:pk>', NoticiaUpdateView.as_view(), name='noticia_editar'),
+    path('noticias/eliminar/<int:pk>', NoticiaDeleteView.as_view(), name='noticia_eliminar'),
     
     # PRESTAMOS
     path('reservar/<int:pk>/', confirmar_reserva, name="confirmar_reserva" ),

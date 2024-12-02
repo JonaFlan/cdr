@@ -1,0 +1,42 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load form_filters %}
+
+{% block title %}{% if noticia %}Editar Noticia: {{ noticia.titulo }}{% else %}Crear Nueva Noticia{% endif %}{% endblock %}
+
+{% block custom %}
+<link rel="stylesheet" href="{% static 'css/noticia_formulario.css' %}">
+{% endblock %}
+
+{% block content %}
+<main class="container mt-5 p-3">
+    <div class="card mx-auto shadow" style="max-width: 700px; background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
+        <div class="card-header text-center" style="background-color: #1A3B2A; color: #A1C181;">
+            <h2 class="m-0">{% if noticia %}Editar Noticia: {{ noticia.titulo }}{% else %}Crear Nueva Noticia{% endif %}</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" class="needs-validation">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="id_titulo" class="form-label">Título:</label>
+                    {{ form.titulo|add_class:"form-control bg-dark text-light border-secondary" }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_contenido" class="form-label">Contenido:</label>
+                    {{ form.contenido|add_class:"form-control bg-dark text-light border-secondary" }}
+                </div>
+                <div class="mb-3">
+                    <label for="id_imagen" class="form-label">Imagen:</label>
+                    {{ form.imagen|add_class:"form-control bg-dark text-light border-secondary" }}
+                </div>
+                <div class="text-center mt-4">
+                    <!-- Botón Guardar -->
+                    <button type="submit" class="btn btn-custom btn-success" style="background-color: #A1C181; border: none;">{% if noticia %} Guardar {% else %} Publicar {% endif %}</button>
+                    <!-- Botón Cancelar -->
+                    <a href="{% url 'noticias' %}" class="btn btn-custom btn-secondary" style="background-color: #6C757D; border: none">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

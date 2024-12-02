@@ -141,22 +141,52 @@ class NoticiaDetailView(DetailView):
     template_name = 'core/noticia_detail.html'
     context_object_name = 'noticia'
 
-class NoticiaCreateView(CreateView):
+class NoticiaCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Noticia
-    fields = ['titulo', 'contenido']
-    template_name = 'core/noticia_form.html'
+    fields = ['titulo', 'contenido', 'imagen']
+    template_name = 'core/noticia_formulario.html'
     success_url = reverse_lazy('noticias')
 
-class NoticiaUpdateView(UpdateView):
+    def form_valid(self, form):
+        form.instance.autor = self.request.user
+        messages.success(self.request, 'La noticia ha sido creada exitosamente.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Hubo un error al intentar crear la noticia. Por favor, verifica los datos.')
+        return super().form_invalid(form)
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+class NoticiaUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Noticia
-    fields = ['titulo', 'contenido']
-    template_name = 'core/noticia_form.html'
+    fields = ['titulo', 'contenido', 'imagen']
+    template_name = 'core/noticia_formulario.html'
     success_url = reverse_lazy('noticias')
 
-class NoticiaDeleteView(DeleteView):
+    def form_valid(self, form):
+        messages.success(self.request, 'La noticia ha sido actualizada exitosamente.')
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Hubo un error al actualizar la noticia. Por favor, verifica los datos.')
+        return super().form_invalid(form)
+    
+    def test_func(self):
+        return self.request.user.is_staff
+
+class NoticiaDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Noticia
-    template_name = 'core/noticia_confirm_delete.html'
+    template_name = 'core/noticia_confirmar_eliminar.html'  # No es necesario porque usamos el modal
     success_url = reverse_lazy('noticias')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, 'La noticia ha sido eliminada correctamente.')
+        return super().delete(request, *args, **kwargs)
+    
+    def test_func(self):
+        return self.request.user.is_staff
 
 #PRESTAMOS
 def gestor_prestamos(request):
