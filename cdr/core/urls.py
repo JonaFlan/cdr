@@ -7,13 +7,16 @@ from .views import (
     index, biblioteca, perfil, sesiones, 
     inscribirse_sesion, anular_inscripcion_sesion, 
     noticias, dado, herramientas, mapas, 
-    manuales, hojapj, ver_manual_juego, confirmar_reserva, liberar_juegos_no_retirados
+    manuales, hojapj, ver_manual_juego, confirmar_reserva, liberar_juegos_no_retirados,
+    gestor_usuarios, crear_usuario, deshabilitar_usuario,seleccionar_imagen_perfil, habilitar_usuario
 )
 
 
 urlpatterns = [
     path('', index, name='index'),
+    #perfil
     path('perfil/', perfil, name='perfil'),
+    path('perfil/seleccionar-imagen/', seleccionar_imagen_perfil, name='seleccionar_imagen_perfil'),
 
     # CRUD de JUEGOS
     path('biblioteca/', biblioteca, name='biblioteca' ),
@@ -53,7 +56,12 @@ urlpatterns = [
     path('hojapj/', hojapj, name='hojapj'),
     path('manual/<int:juego_id>', ver_manual_juego, name='ver_manual_juego'),
 
+    #GESTOR DE USUARIOS
+    path('gestor_usuarios/', gestor_usuarios, name='gestor_usuarios'),
+    path('crear_usuario/', crear_usuario, name='crear_usuario'),
+    path('deshabilitar_usuario/<int:user_id>/', deshabilitar_usuario, name='deshabilitar_usuario'),
+    path('gestor_usuarios/habilitar/<int:user_id>/', habilitar_usuario, name='habilitar_usuario'),
 
-
+    
     path('test/', liberar_juegos_no_retirados, name='test')
 ]

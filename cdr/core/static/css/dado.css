@@ -2,11 +2,27 @@
     font-family: 'Medieval';
     src: url('../fonts/medieval-font.ttf') format('truetype');
 }
+.card-header{
+    background-color: #1A3B2A; 
+    color: #C8D6C3;
+}
+
+.fa-dice{
+    color: #C8D6C3;
+}
+
+.dice-button{
+    background-color: #1A3B2A; 
+    color: #C8D6C3;
+}
+
+
+
 
 /* Estilos base */
 html, body { 
     height: 100%; 
-    background-color: black; 
+    background-color: #06130A; 
     color: white; 
     font-family: 'Medieval', cursive;
 }

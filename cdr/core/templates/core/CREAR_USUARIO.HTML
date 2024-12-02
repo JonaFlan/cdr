@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+{% block title %}Crear Usuario{% endblock %}
+{% block content %}
+<main class="container mt-5 p-3">
+    <div class="card mx-auto shadow" style="max-width: 700px; background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
+        <div class="card-header text-center" style="background-color: #1A3B2A; color: #A1C181;">
+            <h2 class="m-0">Crear Nuevo Usuario</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" class="needs-validation">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="username" class="form-label">Nombre de Usuario:</label>
+                    <input type="text" class="form-control bg-dark text-light border-secondary" id="username" name="username" placeholder="Ej: usuario123" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Correo Electrónico:</label>
+                    <input type="email" class="form-control bg-dark text-light border-secondary" id="email" name="email" placeholder="Ej: usuario@ejemplo.com">
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <input type="password" class="form-control bg-dark text-light border-secondary" id="password" name="password" placeholder="Ingresa una contraseña segura" required>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input bg-dark border-secondary" type="checkbox" id="is_staff" name="is_staff">
+                    <label class="form-check-label" for="is_staff">Es Administrador</label>
+                </div>
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <a href="{% url 'gestor_usuarios' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -133,3 +133,7 @@ LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'login'
 
 X_FRAME_OPTIONS = 'ALLOWALL'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Asegúrate de que este sea el directorio correcto
+]

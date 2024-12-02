@@ -11,6 +11,106 @@ from .models import Sesion, Juego, Noticia, Prestamo
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from .models import Perfil  # Cambiar Profile por Perfil
+from .forms import ProfileUpdateForm 
+import os
+from django.conf import settings
+
+
+
+@login_required
+def seleccionar_imagen_perfil(request):
+    # Ruta absoluta al directorio de imágenes
+    imagenes_dir = os.path.join(settings.BASE_DIR, 'core', 'static', 'perfil_imagenes')
+
+    # Verifica si el directorio existe antes de listar
+    if not os.path.exists(imagenes_dir):
+        messages.error(request, 'El directorio de imágenes no existe.')
+        return redirect('perfil')
+
+    # Listar imágenes disponibles
+    imagenes = [
+        f'perfil_imagenes/{img}' for img in os.listdir(imagenes_dir)
+        if img.endswith(('.png', '.jpg', '.jpeg', '.gif'))
+    ]
+
+    if request.method == 'POST':
+        imagen_seleccionada = request.POST.get('imagen')
+        if imagen_seleccionada and imagen_seleccionada in imagenes:
+            perfil = request.user.perfil
+            perfil.imagen = imagen_seleccionada
+            perfil.save()
+            messages.success(request, '¡Tu imagen de perfil ha sido actualizada!')
+            return redirect('perfil')
+        else:
+            messages.error(request, 'Por favor selecciona una imagen válida.')
+
+    return render(request, 'core/seleccionar_imagen_perfil.html', {
+        'imagenes': imagenes
+    })
+
+
+# Solo accesible para administradores
+@user_passes_test(lambda u: u.is_staff)
+def gestor_usuarios(request):
+    usuarios = User.objects.all()
+    return render(request, 'core/gestor_usuarios.html', {'usuarios': usuarios})
+
+@user_passes_test(lambda u: u.is_staff)
+def crear_usuario(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        is_staff = 'is_staff' in request.POST
+        
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "El nombre de usuario ya existe.")
+        else:
+            usuario = User.objects.create_user(
+                username=username,
+                password=password,
+                email=email,
+                is_staff=is_staff
+            )
+            messages.success(request, "Usuario creado exitosamente.")
+        return redirect('gestor_usuarios')
+    return render(request, 'core/crear_usuario.html')
+
+@user_passes_test(lambda u: u.is_staff)
+def deshabilitar_usuario(request, user_id):
+    usuario = get_object_or_404(User, pk=user_id)
+    usuario.is_active = False
+    usuario.save()
+    messages.success(request, f'El usuario {usuario.username} ha sido deshabilitado.')
+    return redirect('gestor_usuarios')
+
+@user_passes_test(lambda u: u.is_staff)
+def habilitar_usuario(request, user_id):
+    usuario = get_object_or_404(User, pk=user_id)
+    usuario.is_active = True
+    usuario.save()
+    messages.success(request, f'El usuario {usuario.username} ha sido habilitado.')
+    return redirect('gestor_usuarios')
+
+# @user_passes_test(lambda u: u.is_staff)
+# def eliminar_usuario(request, user_id):
+#     usuario = get_object_or_404(User, pk=user_id)
+
+#     if request.method == "POST":
+#         if usuario.is_staff:
+#             messages.error(request, "No se puede eliminar un usuario administrador.")
+#         else:
+#             usuario.delete()
+#             messages.success(request, f"El usuario {usuario.username} ha sido eliminado.")
+#         return redirect('gestor_usuarios')
+
+#     return render(request, 'core/eliminar_usuario.html', {'usuario': usuario})
+
+
 
 # Decorador para permitir solo a administradores
 def admin_required(user):
@@ -18,7 +118,7 @@ def admin_required(user):
 
 # Create your views here.
 def hojapj(request):
-    return render(request, 'core/dnd-char-generator-master/index.html')
+    return render(request, 'core/hojapj.html')
 
 def manuales(request):
     return render(request, 'core/manuales.html')
@@ -44,7 +144,36 @@ def herramientas(request):
 
 @login_required
 def perfil(request):
-    return render(request, 'core/perfil.html', {'user': request.user})
+    user = request.user
+    perfil = user.perfil  # Relación con el modelo Perfil
+    imagen_form = ProfileUpdateForm(instance=perfil)
+    password_form = PasswordChangeForm(user=user)
+
+    if request.method == 'POST':
+        if 'cambiar_imagen' in request.POST:
+            imagen_form = ProfileUpdateForm(request.POST, instance=perfil)
+            if imagen_form.is_valid():
+                imagen_form.save()
+                messages.success(request, 'Tu imagen de perfil ha sido actualizada.')
+                return redirect('perfil')
+        elif 'cambiar_contraseña' in request.POST:
+            password_form = PasswordChangeForm(user=user, data=request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)  # Mantener la sesión activa
+                messages.success(request, 'Tu contraseña ha sido cambiada exitosamente.')
+                return redirect('perfil')
+            else:
+                print(password_form.errors)  # Para depurar errores
+                messages.error(request, 'Hubo un error al cambiar tu contraseña.')
+
+
+    return render(request, 'core/perfil.html', {
+        'user': user,
+        'imagen_form': imagen_form,
+        'password_form': password_form,
+    })
+
 
 #JUEGOS
 def biblioteca(request):

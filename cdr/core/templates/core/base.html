@@ -57,7 +57,7 @@
                           <a class="nav-link dropdown-toggle p-0" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                               <!-- Nombre del usuario y su icono -->
                               <span class="me-2 align-middle">{{ user.username }}</span>
-                              <img src="{{ user.perfil.imagen.url }}" alt="Perfil" class="rounded-circle" height="30" width="30">
+                              <img src="{% static user.perfil.imagen %}" alt="Perfil" class="rounded-circle" height="30" width="30">
                           </a>
                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                               <li><a class="dropdown-item" href="{% url 'perfil' %}">Perfil</a></li>
@@ -70,6 +70,11 @@
                               <!-- Gestor de préstamos: solo para administradores -->
                               {% if user.is_staff %}
                                   <li><a class="dropdown-item" href="{% url 'gestor_prestamos' %}">Gestor de préstamos</a></li>
+                              {% endif %}
+
+                              <!-- Gestor de Usuarios: solo para administradores -->
+                              {% if user.is_staff %}
+                                  <li><a class="dropdown-item" href="{% url 'gestor_usuarios' %}">Gestor de Usuarios</a></li>
                               {% endif %}
                   
                               <li>

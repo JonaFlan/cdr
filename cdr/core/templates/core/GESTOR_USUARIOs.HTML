@@ -1,0 +1,70 @@
+{% extends "core/base.html" %}
+{% block title %}Gestor de Usuarios{% endblock %}
+{% block custom %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 p-3" style="background-color: #0D1D13; color: #C8D6C3; border: 1px solid #1A3B2A; border-radius: 10px;">
+    <h2>Gestor de Usuarios</h2>
+    <div class="mb-3">
+        <a href="{% url 'crear_usuario' %}" class="btn btn-success">Crear Usuario</a>
+    </div>
+    <table id="tablaUsuarios" class="table table-dark table-hover">
+        <thead>
+            <tr>
+                <th>Nombre de Usuario</th>
+                <th>Email</th>
+                <th>Activo</th>
+                <th>Tipo</th> <!-- Nuevo: Indicar si es Administrador o Usuario Normal -->
+                <th>Carrera</th>
+                <th class="text-center">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.username }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>
+                    {% if usuario.is_active %}
+                    <span class="text-success">Sí</span>
+                    {% else %}
+                    <span class="text-danger">No</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if usuario.is_staff %}
+                    <span class="badge bg-primary">Administrador</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Usuario Normal</span>
+                    {% endif %}
+                </td>
+                <td>{{ usuario.perfil.carrera }}</td>
+                <td class="text-center">
+                    {% if not usuario.is_staff %}
+                        {% if usuario.is_active %}
+                            <a href="{% url 'deshabilitar_usuario' usuario.id %}" class="btn btn-sm btn-danger">Deshabilitar</a>
+                        {% else %}
+                            <a href="{% url 'habilitar_usuario' usuario.id %}" class="btn btn-sm btn-success">Habilitar</a>
+                        {% endif %}
+                    {% else %}
+                        <span style="color: aliceblue;">No disponible</span>
+                    {% endif %}
+                </td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#tablaUsuarios').DataTable();
+    });
+</script>
+{% endblock %}

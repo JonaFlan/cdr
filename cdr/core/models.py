@@ -7,7 +7,10 @@ from urllib.parse import urlparse, parse_qs
 
 class Perfil(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
-    imagen = models.ImageField(upload_to='perfil_imagenes/', default='img/default-profile.png')
+    imagen = models.CharField(
+        max_length=255,
+        default='perfil_imagenes/default-profile.png'  # Ruta relativa dentro de `static`
+    )
     nivel = models.IntegerField(default=1)
     experiencia = models.IntegerField(default=0)
 

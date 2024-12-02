@@ -43,7 +43,7 @@
                         <!-- Inscritos -->
                         <div class="inscritos-img d-flex justify-content-center mb-2">
                             {% for usuario in sesion.usuarios_inscritos.all %}
-                                <img src="{{ usuario.perfil.imagen.url }}" alt="{{ usuario.username }}" class="rounded-circle" height="30" width="30">
+                                <img src="{% static usuario.perfil.imagen %}" alt="{{ usuario.username }}" class="rounded-circle" height="30" width="30">
                             {% endfor %}
                         </div>
                         
