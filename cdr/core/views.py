@@ -57,7 +57,15 @@ def seleccionar_imagen_perfil(request):
 # Solo accesible para administradores
 @user_passes_test(lambda u: u.is_staff)
 def gestor_usuarios(request):
-    usuarios = User.objects.all()
+    # Clasificar los usuarios: 0 para normales, 1 para administradores
+    usuarios = User.objects.annotate(
+        tipo=Case(
+            When(is_staff=True, then=1),
+            default=0,
+            output_field=IntegerField()
+        )
+    ).order_by('tipo', 'username')  # Ordenar por tipo y luego alfabéticamente por nombre de usuario
+    
     return render(request, 'core/gestor_usuarios.html', {'usuarios': usuarios})
 
 @user_passes_test(lambda u: u.is_staff)
@@ -515,3 +523,7 @@ def liberar_juegos_no_retirados(request):
         print(f"Juego liberado: {prestamo.juego.nombre} (ID: {prestamo.juego.id})")
         
     return redirect('biblioteca')
+
+def error_view(request, exception=None):
+    context = {'exception': exception}
+    return render(request, 'core/error.html', context)

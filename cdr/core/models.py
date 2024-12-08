@@ -31,6 +31,7 @@ class Perfil(models.Model):
     )
 
     carrera = models.CharField(max_length=50, null=True)
+    rut = models.CharField(max_length=12, unique=True, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'Perfiles'

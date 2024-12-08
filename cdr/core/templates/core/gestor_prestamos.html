@@ -44,7 +44,17 @@
             <tbody>
                 {% for prestamo in prestamos %}
                 <tr>
-                    <td >{{ prestamo.usuario.get_full_name }}</td>
+                    <td>
+                        <span 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="top" 
+                            data-bs-html="true"
+                            title="<strong>Email:</strong> {{ prestamo.usuario.email }}<br>
+                                   <strong>RUT:</strong> {{ prestamo.usuario.perfil.rut|default:'No disponible' }}<br>
+                                   <strong>Carrera:</strong> {{ prestamo.usuario.perfil.carrera|default:'No especificada' }}">
+                            {{ prestamo.usuario.get_full_name }}
+                        </span>
+                    </td>
                     <td >{{ prestamo.juego.nombre }}</td>
                     <td >
                         <span class="badge {% if prestamo.estado == 'RESERVADO' %}bg-warning{% elif prestamo.estado == 'PRESTADO' %}bg-success{% else %}bg-secondary{% endif %}">

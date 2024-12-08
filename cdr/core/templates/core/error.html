@@ -1,0 +1,12 @@
+{% extends "core/base.html" %}
+
+{% block title %}Error {{ status_code }} - La Cripta del Rol{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #1A3B2A; color: #C8D6C3;">
+    <div style="text-align: center; padding: 50px; background-color: #1A3B2A; color: #C8D6C3;">
+        <h1 style="font-size: 3rem; font-weight: bold;">Error {{ status_code }}</h1>
+        <p style="font-size: 1.5rem;">Algo ha salido mal, pero no te preocupes, la cripta está llena de misterios. ¡Vuelve a intentarlo pronto!</p>
+    </div>
+</div>
+{% endblock %}

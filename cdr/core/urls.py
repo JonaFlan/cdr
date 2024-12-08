@@ -1,4 +1,5 @@
 from django.urls import path
+from django.shortcuts import render
 from .views import SesionCreateView, SesionUpdateView, SesionDeleteView
 from .views import JuegoDetailView, JuegoCreateView, JuegoUpdateView, JuegoDeleteView
 from .views import NoticiaDetailView, NoticiaCreateView, NoticiaUpdateView, NoticiaDeleteView
@@ -64,4 +65,10 @@ urlpatterns = [
 
     
     path('test/', liberar_juegos_no_retirados, name='test')
+
 ]
+
+# Asignar la misma vista para todos los errores
+handler404 = 'core.views.error_view'
+handler500 = 'core.views.error_view'
+handler403 = 'core.views.error_view'

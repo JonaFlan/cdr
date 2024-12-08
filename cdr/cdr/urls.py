@@ -18,6 +18,15 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
+from django.conf.urls import handler404, handler500, handler403
+from core.views import error_view
+from django.shortcuts import render
+
+
+# Asignar la misma vista para todos los errores
+handler404 = error_view
+handler500 = error_view
+handler403 = error_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),

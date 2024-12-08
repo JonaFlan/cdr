@@ -1,8 +1,8 @@
 $(document).ready(function () {
-    $('#tablaPrestamos').DataTable({
+    $('#tablaUsuarios').DataTable({
         paging: true,
         ordering: true, // Permitir ordenamiento manual del usuario
-        order: [[2, "desc"], [3, "desc"]], // Configuración inicial: prioridad y fechas
+        order: [[3, "desc"], [2, "desc"]], // Configuración inicial: prioridad y fechas
         columnDefs: [
             {
                 targets: 0, // Columna 0 (Usuario o similar)
@@ -12,10 +12,7 @@ $(document).ready(function () {
                 targets: 1, // Columna 1 (Préstamos u otra)
                 orderable: true,
             },
-            {
-                targets: 6, // Acciones: No se permite ordenar
-                orderable: false,
-            },
+
         ],
         language: {
             url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/Spanish.json",
@@ -43,12 +40,5 @@ document.addEventListener('DOMContentLoaded', function () {
         modalMessage.textContent = message;
         gameName.textContent = game;
         confirmActionBtn.href = url;
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 });
