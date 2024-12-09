@@ -11,11 +11,12 @@
 <main class="container mt-5 p-3 container-principal">
     {% for manual in juego.manuales.all %}
     <div class="map-container text-center mb-3">
+        <!-- Mostrar el iframe en todas las pantallas -->
         <iframe 
             id="pdfViewer"
             src="{{ manual.archivo.url }}" 
-            class="w-100 d-none d-md-block" 
-            style="height: calc(100vh - 100px);" 
+            class="w-100" 
+            style="height: 60vh;" 
             frameborder="0" 
             allowfullscreen>
         </iframe>
