@@ -38,43 +38,60 @@
                 <div class="sesion-card">
                     <!-- Header con íconos de inscripción, estado e iniciar asistencia -->
                     <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #1A3B2A; color: #C8D6C3;">
-                        {% if user.is_authenticated %}
-                            {% if user != sesion.creador %}
-                                {% if user in sesion.participantes.all %}
-                                    <!-- El usuario ya confirmó su asistencia, no mostrar botones -->
-                                {% else %}
-                                    {% if sesion.estado == 'en_curso' and user in sesion.usuarios_inscritos.all and user not in sesion.usuarios_participantes.all %}
-                                        <!-- Botón para confirmar asistencia -->
-                                        <button type="button" class="btn btn-icon" data-bs-toggle="modal" 
-                                                data-bs-target="#asistenciaModal" data-id="{{ sesion.id }}" 
-                                                title="Confirmar asistencia">
-                                            <i class="fas fa-user-check" style="font-size: 1.5rem; color: #A1C181;"></i>
+                        <div>
+                            {% if user.is_authenticated %}
+                                {% if user != sesion.creador %}
+                                    {% if user in sesion.participantes.all %}
+                                        <!-- El usuario ya confirmó su asistencia, no mostrar botones -->
+                                    {% else %}
+                                        {% if sesion.estado == 'en_curso' and user in sesion.usuarios_inscritos.all %}
+                                            <!-- Botón para confirmar asistencia -->
+                                            <button type="button" class="btn btn-icon" data-bs-toggle="modal" 
+                                                    data-bs-target="#asistenciaModal" data-id="{{ sesion.id }}" 
+                                                    title="Confirmar asistencia">
+                                                <i class="fas fa-user-check" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                            </button>
+                                        {% elif sesion.estado == 'pendiente' and user in sesion.usuarios_inscritos.all %}
+                                            <!-- Icono para anular inscripción -->
+                                            <a href="{% url 'anular_inscripcion_sesion' sesion.id %}" 
+                                            class="btn btn-icon" title="Anular inscripción">
+                                                <i class="fas fa-times-circle" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                            </a>
+                                        {% elif sesion.estado == 'pendiente' and user not in sesion.usuarios_inscritos.all %}
+                                            <!-- Icono para inscribirse -->
+                                            <a href="{% url 'inscribirse_sesion' sesion.id %}" 
+                                            class="btn btn-icon" title="Inscribirse">
+                                                <i class="fas fa-user-plus" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                            </a>
+                                        {% endif %}
+                                    {% endif %}
+                                {% elif user == sesion.creador %}
+                                    {% if sesion.estado == 'pendiente' %}
+                                        <!-- Icono para iniciar sesión -->
+                                        <a href="{% url 'iniciar_sesion_juego' sesion.id %}" 
+                                        class="btn btn-icon" title="Iniciar Sesión">
+                                            <i class="fas fa-play-circle" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                        </a>
+                                    {% elif sesion.estado == 'en_curso' %}
+                                        <!-- Ícono para mostrar/ocultar el código -->
+                                        <button class="btn btn-icon toggle-code-btn" title="Mostrar/Ocultar código"
+                                                data-bs-toggle="tooltip" onclick="toggleCodigo({{ sesion.id }})">
+                                            <i class="fas fa-key" style="font-size: 1.5rem; color: #A1C181;"></i>
                                         </button>
-                                    {% elif sesion.estado == 'pendiente' and user in sesion.usuarios_inscritos.all %}
-                                        <!-- Icono para anular inscripción -->
-                                        <a href="{% url 'anular_inscripcion_sesion' sesion.id %}" 
-                                        class="btn btn-icon" title="Anular inscripción">
-                                            <i class="fas fa-times-circle" style="font-size: 1.5rem; color: #A1C181;"></i>
-                                        </a>
-                                    {% elif sesion.estado == 'pendiente' and user not in sesion.usuarios_inscritos.all %}
-                                        <!-- Icono para inscribirse -->
-                                        <a href="{% url 'inscribirse_sesion' sesion.id %}" 
-                                        class="btn btn-icon" title="Inscribirse">
-                                            <i class="fas fa-user-plus" style="font-size: 1.5rem; color: #A1C181;"></i>
-                                        </a>
                                     {% endif %}
                                 {% endif %}
-                            {% elif user == sesion.creador %}
-                                {% if sesion.estado == 'pendiente' %}
-                                    <!-- Icono para iniciar sesión -->
-                                    <a href="{% url 'iniciar_sesion_juego' sesion.id %}" 
-                                    class="btn btn-icon" title="Iniciar Sesión">
-                                        <i class="fas fa-play-circle" style="font-size: 1.5rem; color: #A1C181;"></i>
-                                    </a>
-                                {% endif %}
                             {% endif %}
+                        </div>
+                    
+                        <!-- Código de la sesión oculto al inicio -->
+                        {% if sesion.estado == 'en_curso' %}
+                            <div id="codigo-sesion-{{ sesion.id }}" class="text-end ms-auto me-2" style="display: none;">
+                                <p style="margin: 0; font-size: 0.9rem; color: #C8D6C3;"><strong>{{ sesion.codigo_secreto }}</strong></p>
+                            </div>
                         {% endif %}
                     </div>
+
+
     
                     <!-- Imagen del juego -->
                     {% if sesion.juego.imagen %}
@@ -219,6 +236,15 @@
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
     });
+
+    function toggleCodigo(sesionId) {
+        const codigoSesion = document.getElementById(`codigo-sesion-${sesionId}`);
+        if (codigoSesion.style.display === "none") {
+            codigoSesion.style.display = "block";
+        } else {
+            codigoSesion.style.display = "none";
+        }
+    }
 </script>
     
 {% endblock %}
