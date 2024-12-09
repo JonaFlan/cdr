@@ -12,7 +12,7 @@
             {% for imagen in imagenes %}
             <div class="col-md-3 mb-4">
                 <div class="card shadow-sm" style="border: 1px solid #A1C181;">
-                    <img src="{% static imagen %}" alt="Imagen de perfil" class="card-img-top" style="height: 150px; object-fit: cover;">
+                    <img src="{% static imagen %}" alt="Imagen de perfil" class="card-img-top" style="height: 300px; object-fit: cover;">
                     <div class="card-body text-center">
                         <input type="radio" name="imagen" value="{{ imagen }}" id="imagen_{{ forloop.counter }}">
                         <label for="imagen_{{ forloop.counter }}" style="color: #A1C181;">Seleccionar</label>

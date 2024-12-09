@@ -3,13 +3,13 @@ from django.shortcuts import render
 from .views import SesionCreateView, SesionUpdateView, SesionDeleteView
 from .views import JuegoDetailView, JuegoCreateView, JuegoUpdateView, JuegoDeleteView
 from .views import NoticiaDetailView, NoticiaCreateView, NoticiaUpdateView, NoticiaDeleteView
-from .views import gestor_prestamos, confirmar_retiro, confirmar_devolucion, cancelar_prestamo
+from .views import gestor_prestamos, confirmar_retiro, confirmar_devolucion, cancelar_prestamo, confirmar_inicio_sesion, confirmar_asistencia
 from .views import (
     index, biblioteca, perfil, sesiones, 
     inscribirse_sesion, anular_inscripcion_sesion, 
     noticias, dado, herramientas, mapas, 
     manuales, hojapj, ver_manual_juego, confirmar_reserva, liberar_juegos_no_retirados,
-    gestor_usuarios, crear_usuario, deshabilitar_usuario,seleccionar_imagen_perfil, habilitar_usuario
+    gestor_usuarios, crear_usuario, deshabilitar_usuario,seleccionar_imagen_perfil, habilitar_usuario, ver_perfil_usuario
 )
 
 
@@ -17,7 +17,8 @@ urlpatterns = [
     path('', index, name='index'),
     #perfil
     path('perfil/', perfil, name='perfil'),
-    path('perfil/seleccionar-imagen/', seleccionar_imagen_perfil, name='seleccionar_imagen_perfil'),
+    path('perfil/<str:username>/', ver_perfil_usuario, name='ver_perfil_usuario'),
+    path('seleccionar_imagen_perfil/', seleccionar_imagen_perfil, name='seleccionar_imagen_perfil'),
 
     # CRUD de JUEGOS
     path('biblioteca/', biblioteca, name='biblioteca' ),
@@ -32,6 +33,8 @@ urlpatterns = [
     path('sesiones/editar/<int:pk>/', SesionUpdateView.as_view(), name='sesion_update'),
     path('sesiones/eliminar/<int:pk>/', SesionDeleteView.as_view(), name='sesion_delete'),
     path('sesiones/anular_inscripcion/<int:sesion_id>/', anular_inscripcion_sesion, name='anular_inscripcion_sesion'),
+    path('sesiones/iniciar/<int:sesion_id>/', confirmar_inicio_sesion, name='iniciar_sesion_juego'),
+    path('sesiones/asistencia/<int:sesion_id>/', confirmar_asistencia, name='confirmar_asistencia'),
     path('inscribirse/<int:sesion_id>/', inscribirse_sesion, name='inscribirse_sesion'),
 
     # CRUD de Noticias

@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.common.BrokenLinkEmailsMiddleware',  # Para manejar enlaces rotos
     'django.middleware.csrf.CsrfViewMiddleware',  # Protege las vistas de CSRF
     'django.middleware.http.ConditionalGetMiddleware',  # Optimiza el manejo de peticiones
-    'core.middleware.ErrorMiddleware',  # Middleware personalizado para errores
+    # 'core.middleware.ErrorMiddleware',  # Middleware personalizado para errores
 ]
 
 ROOT_URLCONF = 'cdr.urls'

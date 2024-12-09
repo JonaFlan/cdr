@@ -3,17 +3,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from urllib.parse import urlparse, parse_qs
 from django.utils.timezone import localtime
+import random
+import string
+
 
 # Create your models here.
 
 class Perfil(models.Model):
-    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
-    imagen = models.CharField(
-        max_length=255,
-        default='perfil_imagenes/default-profile.png'  # Ruta relativa dentro de `static`
-    )
-    nivel = models.IntegerField(default=1)
-    experiencia = models.IntegerField(default=0)
 
     TITULO_CHOICES = [
         ('NEOFITO', 'Neófito de la Cripta'),
@@ -24,14 +20,20 @@ class Perfil(models.Model):
         ('ARCHIMAGO', 'Archimago de las tinieblas'),
         ('LICH', 'Lich supremo'),
     ]
-    titulo = models.CharField(
-        max_length=50,
-        choices=TITULO_CHOICES,
-        default='NEOFITO'
-    )
 
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    imagen = models.CharField(max_length=255, default='perfil_imagenes/default-profile.png')  # Ruta relativa dentro de `static`
+    nivel = models.IntegerField(default=1)
+    titulo = models.CharField(max_length=50, choices=TITULO_CHOICES, default='NEOFITO')
     carrera = models.CharField(max_length=50, null=True)
     rut = models.CharField(max_length=12, unique=True, null=True, blank=True)
+    xp = models.PositiveIntegerField(default=0)  # Experiencia
+    cdlc = models.PositiveIntegerField(default=0)  # Créditos De La Cripta
+
+    def agregar_recompensas(self, xp=0, cdlc=0):
+        self.xp += xp
+        self.cdlc += cdlc
+        self.save()
 
     class Meta:
         verbose_name_plural = 'Perfiles'
@@ -61,7 +63,7 @@ class Juego(models.Model):
     descripcion = models.TextField(max_length=2000, blank=True, null=True)
     video_tutorial = models.URLField(max_length=500, blank=True, null=True)
     jugadores_min = models.PositiveIntegerField(default=1)
-    jugadores_max = models.PositiveIntegerField(default=2) 
+    jugadores_max = models.PositiveIntegerField(default=2)
 
     def video_embed_url(self):
         if self.video_tutorial:
@@ -94,11 +96,25 @@ class Manual(models.Model):
         verbose_name_plural = 'Manuales'
 
 class Sesion(models.Model):
+    ESTADOS = [
+        ('pendiente', 'Pendiente'),
+        ('en_curso', 'En curso'),
+        ('finalizada', 'Finalizada'),
+    ]
+
     juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
     fecha = models.DateTimeField()
     capacidad_maxima = models.PositiveIntegerField()
     usuarios_inscritos = models.ManyToManyField(User, related_name='sesiones_inscritas', blank=True)
+    usuarios_participantes = models.ManyToManyField(User, related_name='sesiones_participadas', blank=True)
     creador = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sesiones_creadas', blank=True, null=True)
+    estado = models.CharField(max_length=20, choices=ESTADOS, default='pendiente')
+    xp_participante = models.PositiveIntegerField(default=20)  # XP por participar
+    cdlc_participante = models.PositiveIntegerField(default=10)  # CDLC por participar
+    xp_creador = models.PositiveIntegerField(default=50)  # XP por crear la sesión
+    cdlc_creador = models.PositiveIntegerField(default=25)  # CDLC por organizar
+    codigo_secreto = models.CharField(max_length=6, blank=True, null=True)  # Código de acceso
+
 
     class Meta:
         verbose_name_plural = 'Sesiones'
@@ -109,6 +125,27 @@ class Sesion(models.Model):
     def cupos_disponibles(self):
         return self.capacidad_maxima - self.usuarios_inscritos.count()
     
+    def generar_codigo_secreto(self):
+        """Genera un código aleatorio para la sesión."""
+        self.codigo_secreto = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+        self.save()
+    
+    def verificar_codigo(self, codigo):
+        """Verifica si el código ingresado coincide con el de la sesión."""
+        return self.codigo_secreto == codigo
+
+    def otorgar_recompensas(self):
+        # Recompensas para el creador
+        self.creador.perfil.agregar_recompensas(xp=self.xp_creador, cdlc=self.cdlc_creador)
+        
+        # Recompensas para los participantes
+        for usuario in self.usuarios_participantes.all():
+            usuario.perfil.agregar_recompensas(xp=self.xp_participante, cdlc=self.cdlc_participante)
+
+        # Cambiar el estado a finalizada
+        self.estado = 'finalizada'
+        self.save()
+
     def titulo(self):
         fecha_formateada = localtime(self.fecha).strftime("%d/%m/%Y %H:%M")
         return f'{self.juego.nombre} - {fecha_formateada}'

@@ -21,59 +21,8 @@
         {% endfor %}
     </div>
     
-    <!-- Tarjetas de sesión -->
     <div class="row">
-        {% for sesion in sesiones %}
-            <div class="col-md-6 col-lg-4 mb-4">
-                <div class="sesion-card">
-                    <!-- Iconos de administrador -->
-                    {% if user.is_authenticated and sesion.creador == user %}
-                        <div class="card-footer d-flex justify-content-between mb-2" style="background-color: #1A3B2A; color: #C8D6C3;">
-                            <a href="{% url 'sesion_update' sesion.id %}" class="btn btn-icon" title="Editar">
-                                <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
-                            </a>
-                            <button type="button" class="btn btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Eliminar"
-                                data-id="{{ sesion.id }}" data-titulo="{{ sesion.titulo }}">
-                                <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
-                            </button>
-                        </div>
-                    {% endif %}
-                    <!-- Imagen del juego -->
-                    {% if sesion.juego.imagen %}
-                        <img src="{{ sesion.juego.imagen.url }}" alt="{{ sesion.juego.nombre }}" class="img-fluid w-100">
-                    {% else %}
-                        <img src="https://via.placeholder.com/200" alt="Imagen no disponible" class="img-fluid w-100">
-                    {% endif %}
-                    <!-- Detalles de la sesión -->
-                    <div class="sesion-card-body text-center">
-                        <!-- <h5 class="sesion-card-title">{{ sesion.titulo }}</h5> -->
-                        <p class="sesion-card-text"><strong>Juego:</strong> {{ sesion.juego.nombre }}</p>
-                        <p class="sesion-card-text"><strong>Fecha:</strong> {{ sesion.fecha }}</p>
-                        <p class="sesion-card-text">{{ sesion.descripcion }}</p>
-                        <p class="sesion-card-text"><strong>Cupos disponibles:</strong> {{ sesion.cupos_disponibles }}</p>
-                        
-                        <!-- Inscritos -->
-                        <div class="inscritos-img d-flex justify-content-center mb-2">
-                            {% for usuario in sesion.usuarios_inscritos.all %}
-                                <img src="{% static usuario.perfil.imagen %}" alt="{{ usuario.username }}" class="rounded-circle" height="30" width="30">
-                            {% endfor %}
-                        </div>
-                        
-                        <!-- Botones de inscripción -->
-                        {% if user in sesion.usuarios_inscritos.all %}
-                            <p class="text-success">¡Ya estás inscrito!</p>
-                            <a href="{% url 'anular_inscripcion_sesion' sesion.id %}" class="btn btn-dark-gothic btn-sm my-2">Anular inscripción</a>
-                        {% else %}
-                            <a href="{% url 'inscribirse_sesion' sesion.id %}" class="btn btn-dark-gothic btn-sm my-2">Inscribirse</a>
-                        {% endif %}
-
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-
-
-        <!-- Tarjeta de agregar sesión -->
+        
         {% if user.is_authenticated %}
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 d-flex align-items-center justify-content-center game-card position-relative" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
@@ -83,31 +32,160 @@
             </div>
         </div>
         {% endif %}
+
+        {% for sesion in sesiones %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="sesion-card">
+                    <!-- Header con íconos de inscripción, estado e iniciar asistencia -->
+                    <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #1A3B2A; color: #C8D6C3;">
+                        {% if user.is_authenticated %}
+                            {% if user != sesion.creador %}
+                                {% if user in sesion.participantes.all %}
+                                    <!-- El usuario ya confirmó su asistencia, no mostrar botones -->
+                                {% else %}
+                                    {% if sesion.estado == 'en_curso' and user in sesion.usuarios_inscritos.all and user not in sesion.usuarios_participantes.all %}
+                                        <!-- Botón para confirmar asistencia -->
+                                        <button type="button" class="btn btn-icon" data-bs-toggle="modal" 
+                                                data-bs-target="#asistenciaModal" data-id="{{ sesion.id }}" 
+                                                title="Confirmar asistencia">
+                                            <i class="fas fa-user-check" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                        </button>
+                                    {% elif sesion.estado == 'pendiente' and user in sesion.usuarios_inscritos.all %}
+                                        <!-- Icono para anular inscripción -->
+                                        <a href="{% url 'anular_inscripcion_sesion' sesion.id %}" 
+                                        class="btn btn-icon" title="Anular inscripción">
+                                            <i class="fas fa-times-circle" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                        </a>
+                                    {% elif sesion.estado == 'pendiente' and user not in sesion.usuarios_inscritos.all %}
+                                        <!-- Icono para inscribirse -->
+                                        <a href="{% url 'inscribirse_sesion' sesion.id %}" 
+                                        class="btn btn-icon" title="Inscribirse">
+                                            <i class="fas fa-user-plus" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
+                            {% elif user == sesion.creador %}
+                                {% if sesion.estado == 'pendiente' %}
+                                    <!-- Icono para iniciar sesión -->
+                                    <a href="{% url 'iniciar_sesion_juego' sesion.id %}" 
+                                    class="btn btn-icon" title="Iniciar Sesión">
+                                        <i class="fas fa-play-circle" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+    
+                    <!-- Imagen del juego -->
+                    {% if sesion.juego.imagen %}
+                        <img src="{{ sesion.juego.imagen.url }}" alt="{{ sesion.juego.nombre }}" 
+                             class="img-fluid w-100">
+                    {% else %}
+                        <img src="https://via.placeholder.com/200" alt="Imagen no disponible" 
+                             class="img-fluid w-100">
+                    {% endif %}
+    
+                    <!-- Detalles de la sesión -->
+                    <div class="sesion-card-body text-center">
+                        <p class="sesion-card-text"><strong>Juego:</strong> {{ sesion.juego.nombre }}</p>
+                        <p class="sesion-card-text"><strong>Fecha:</strong> {{ sesion.fecha }}</p>
+                        <p class="sesion-card-text">{{ sesion.descripcion }}</p>
+                        <p class="sesion-card-text"><strong>Cupos disponibles:</strong> {{ sesion.cupos_disponibles }}</p>
+                        {% if sesion.estado != "pendiente" %}
+                        <p class="sesion-card-text"><strong>Estado:</strong> {{ sesion.get_estado_display }}</p>
+                        {% endif %}
+                        <!-- Inscritos -->
+                        <div class="inscritos-img d-flex justify-content-center flex-wrap">
+                            {% for usuario in sesion.usuarios_inscritos.all %}
+                                <div class="position-relative mx-1">
+                                    <!-- Enlace a perfil con tooltip -->
+                                    <a href="{% url 'ver_perfil_usuario' usuario.username %}" data-bs-toggle="tooltip" 
+                                    title="{{ usuario.username }}" 
+                                    class="{% if usuario in sesion.participantes.all %}confirmed-participant{% endif %}">
+                                        <img src="{% static usuario.perfil.imagen %}" 
+                                            alt="{{ usuario.username }}" 
+                                            class="rounded-circle border" height="50" width="50">
+                                    </a>
+                                    {% if usuario in sesion.usuarios_participantes.all %}
+                                        <!-- Ticket sobrepuesto -->
+                                        <div class="participation-badge position-absolute">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+    
+                    <!-- Footer con botones de administración -->
+                    {% if user.is_authenticated and sesion.creador == user %}
+                        <div class="card-footer d-flex justify-content-between" 
+                             style="background-color: #1A3B2A; color: #C8D6C3;">
+                            <a href="{% url 'sesion_update' sesion.id %}" class="btn btn-icon" title="Editar">
+                                <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
+                            </a>
+                            <button type="button" class="btn btn-icon" data-bs-toggle="modal" 
+                                    data-bs-target="#deleteModal" title="Eliminar"
+                                    data-id="{{ sesion.id }}" data-titulo="{{ sesion.titulo }}">
+                                <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    <!-- Modal de confirmación para eliminar la sesión -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content" style="background-color: #1A3B2A; color: #C8D6C3;">
-                <div class="modal-header" style="border-bottom: 1px solid #A1C181;">
-                    <h5 class="modal-title" id="deleteModalLabel" style="color: #A1C181;">Confirmar eliminación</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ¿Estás seguro de que deseas eliminar la sesión "<span id="sesionTitulo"></span>"?. Esta acción no se puede deshacer.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #6C757D; border: none;">Cancelar</button>
-                    
-                    <!-- Formulario POST para eliminar la sesión -->
-                    <form method="POST" id="deleteForm">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" style="background-color: #A1C181; border: none;">Eliminar</button>
-                    </form>
-                </div>
+
+
+    </div>
+
+</main>
+
+<!-- Modal de confirmación para eliminar la sesión -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #1A3B2A; color: #C8D6C3;">
+            <div class="modal-header" style="border-bottom: 1px solid #A1C181;">
+                <h5 class="modal-title" id="deleteModalLabel" style="color: #A1C181;">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que deseas eliminar la sesión "<span id="sesionTitulo"></span>"?. Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #6C757D; border: none;">Cancelar</button>
+                
+                <!-- Formulario POST para eliminar la sesión -->
+                <form method="POST" id="deleteForm">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" style="background-color: #A1C181; border: none;">Eliminar</button>
+                </form>
             </div>
         </div>
     </div>
-</main>
+</div>
+
+<!-- Modal para confirmar asistencia -->
+<div class="modal fade" id="asistenciaModal" tabindex="-1" aria-labelledby="asistenciaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background-color: #1A3B2A; color: #C8D6C3;">
+            <div class="modal-header" style="border-bottom: 1px solid #A1C181;">
+                <h5 class="modal-title" id="asistenciaModalLabel" style="color: #A1C181;">Confirmar asistencia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Introduce el código de la sesión para confirmar tu asistencia:</p>
+                <form method="POST" id="asistenciaForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="codigo_sesion" placeholder="Código de sesión" required>
+                    </div>
+                    <button type="submit" class="btn btn-success" style="background-color: #A1C181; border: none;">Confirmar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     const deleteModal = document.getElementById('deleteModal');
@@ -123,6 +201,23 @@
         // Crear el formulario dinámicamente con el ID de la sesión
         const deleteForm = document.getElementById('deleteForm');
         deleteForm.action = "/sesiones/eliminar/0/".replace('0', sesionId);
+    });
+
+    const asistenciaModal = document.getElementById('asistenciaModal');
+    asistenciaModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Botón que activó el modal
+        const sesionId = button.getAttribute('data-id');
+        
+        // Crear el formulario dinámicamente con el ID de la sesión
+        const asistenciaForm = document.getElementById('asistenciaForm');
+        asistenciaForm.action = "/sesiones/asistencia/0/".replace('0', sesionId);
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
     });
 </script>
     

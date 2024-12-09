@@ -8,15 +8,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="wrapper">
-    <h1>HERRAMIENTAS</h1>
+<div class="wrapper mt-5">
     <div class="cols">
         <a href="{% url 'dado' %}" class="col">
             <div class="container">
                 <div class="front" style="background-image: url({% static 'img/dice-icon.png' %});">
                     <div class="inner">
                         <p>DADOS</p>
-                        <span>Lanza Dados</span>
+                        <span>Lanza dados</span>
                     </div>
                 </div>
                 <div class="back" style="background-image: url({% static 'img/dice-icon2.png' %});">
@@ -31,7 +30,7 @@
             <div class="container">
                 <div class="front" style="background-image: url({% static 'img/hojapj.png' %});">
                     <div class="inner">
-                        <p>PERSONAJES</p>
+                        <p>CREADOR DE PERSONAJE</p>
                         <span>Crea tu personaje</span>
                     </div>
                 </div>
@@ -43,27 +42,11 @@
             </div>
         </a>
 
-        <a href="{% url 'manuales' %}" class="col">
-            <div class="container">
-                <div class="front" style="background-image: url({% static 'img/manuales.png' %});">
-                    <div class="inner">
-                        <p>TUTORIAL</p>
-                        <span>Expande tu Conocimiento</span>
-                    </div>
-                </div>
-                <div class="back" style="background-image: url({% static 'img/manuales2.png' %});">
-                    <div class="inner">
-                        <p>Tutorial del juego.</p>
-                    </div>
-                </div>
-            </div>
-        </a>
-
         <a href="{% url 'mapas' %}" class="col">
             <div class="container">
                 <div class="front" style="background-image: url({% static 'img/mapas.png' %});">
                     <div class="inner">
-                        <p>MAP GENERATOR</p>
+                        <p>MAPA INTERACTIVO</p>
                         <span>Crea y comparte mapas</span>
                     </div>
                 </div>

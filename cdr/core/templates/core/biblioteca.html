@@ -22,6 +22,16 @@
     </div>
 
     <div class="row">
+        <!-- Botón para agregar juegos (solo visible para administradores) -->
+        {% if user.is_authenticated and user.is_staff %}
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+            <div class="card h-100 d-flex align-items-center justify-content-center game-card position-relative" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
+                <a href="{% url 'juego_crear' %}" class="btn btn-icon d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; text-decoration: none;">
+                    <i class="fas fa-plus" style="font-size: 3rem; color: #A1C181;" title="Agregar Juego"></i>
+                </a>
+            </div>
+        </div>
+        {% endif %}
         <!-- Tarjetas de juegos -->
         {% for juego in juegos %}
             <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
@@ -76,16 +86,7 @@
                 </div>
             </div>
         {% endfor %}
-        <!-- Botón para agregar juegos (solo visible para administradores) -->
-        {% if user.is_authenticated and user.is_staff %}
-        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-            <div class="card h-100 d-flex align-items-center justify-content-center game-card position-relative" style="background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
-                <a href="{% url 'juego_crear' %}" class="btn btn-icon d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; text-decoration: none;">
-                    <i class="fas fa-plus" style="font-size: 3rem; color: #A1C181;" title="Agregar Juego"></i>
-                </a>
-            </div>
-        </div>
-        {% endif %}
+
     </div>
 
     <!-- Modal de confirmación para eliminar el juego -->

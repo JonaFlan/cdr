@@ -1,73 +1,97 @@
 {% extends 'core/base.html' %}
 {% load static %}
-{% block title %}Perfil - {{ user.username }}{% endblock %}
+{% load form_filters %}
+{% block title %}{{ user.username }}{% endblock %}
+{% block custom %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/perfil.css' %}">
+{% endblock %}
 {% block content %}
 <div class="container mt-5">
     <!-- Mensajes de retroalimentación -->
-    {% if messages %}
-        <div class="alert-container mb-4">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    <div class="row">
+        {% for message in messages %}
+            <div class="col-12 mb-2">
+                <div class="alert {% if message.tags == 'error' %}alert-danger{% else %}alert-success{% endif %} alert-dismissible fade show" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+            </div>
+        {% endfor %}
+    </div>
 
     <!-- Tarjeta de perfil -->
     <div class="card mx-auto shadow"
         style="max-width: 700px; background-color: #0D1D13; border: 1px solid #1A3B2A; color: #C8D6C3;">
         <div class="card-header text-center" style="background-color: #1A3B2A; color: #A1C181;">
-            <h2 class="m-0">Perfil de {{ user.username }}</h2>
+            <h2 class="m-0">Perfil de {{ perfil_user.username }}</h2>
         </div>
         <div class="card-body">
             <!-- Imagen de perfil -->
-            <div class="text-center mb-4">
-                {% if user.perfil.imagen %}
-                    <img id="preview" src="{% static user.perfil.imagen %}" alt="Imagen de perfil"
-                        class="img-fluid rounded-circle border"
-                        style="width: 150px; height: 150px; border: 2px solid #A1C181;">
+            <div class="text-center mb-4 ">
+                {% if perfil_user.perfil.imagen %}
+                    <div id="div-imagen" class="position-relative d-inline-block">
+                        <img id="preview" src="{% static perfil_user.perfil.imagen %}" alt="Imagen de perfil"
+                            class="img-fluid rounded-circle border profile-img">
+                        {% if perfil_user == request.user %}
+                            <a href="{% url 'seleccionar_imagen_perfil' %}"
+                            class="btn btn-success btn-sm position-absolute shadow-sm img-edit-btn">
+                                <i class="bi bi-pencil" style="font-size: 1.2rem; color: white;"></i>
+                            </a>
+                        {% endif %}
+                    </div>
                 {% else %}
                     <img id="preview" src="{% static 'perfil_imagenes/default-profile.png' %}" alt="Imagen de perfil"
-                        class="img-fluid rounded-circle border"
-                        style="width: 150px; height: 150px; border: 2px solid #A1C181;">
+                         class="img-fluid rounded-circle border profile-img">
                 {% endif %}
+                <!-- Botón de lápiz -->
             </div>
 
-            <p class="text-center"><strong>Nivel:</strong> {{ user.perfil.nivel }}</p>
-            <p class="text-center"><strong>Título:</strong> {{ user.perfil.titulo }}</p>
-            <p class="text-center"><strong>Carrera:</strong> {{ user.perfil.carrera }}</p>
+            <p><strong>Nivel:</strong> {{ perfil_user.perfil.nivel }}</p>
+            <p><strong>Título:</strong> {{ perfil_user.perfil.get_titulo_display }}</p>
+            <p><strong>XP:</strong> {{ perfil_user.perfil.xp }}</p>
+            <p><strong>CDLC:</strong> {{ perfil_user.perfil.cdlc }}</p>
+            <p><strong>Carrera:</strong> {{ perfil_user.perfil.carrera }}</p>
 
             <hr class="mb-4" style="border-color: #1A3B2A;">
 
-            <!-- Formulario para cambiar la imagen -->
-            <h4 class="text-center mb-3" style="color: #A1C181;">Actualizar Imagen de Perfil</h4>
-            <form method="post" class="mb-5 text-center">
-                {% csrf_token %}
-                <a href="{% url 'seleccionar_imagen_perfil' %}" class="btn btn-success shadow-sm"
-                    style="font-weight: bold; font-size: 1.1rem;">Seleccionar Nueva Imagen</a>
-            </form>
-
+            {% if perfil_user == request.user %}
             <!-- Formulario para cambiar la contraseña -->
-            <h4 class="text-center mb-3" style="color: #A1C181;">Cambiar Contraseña</h4>
-            <form method="post">
+
+            <form method="post" class="p-4 rounded shadow"
+                  style="background-color: #1A3B2A; border: 1px solid #A1C181; margin: 0 auto;">
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label for="id_old_password" class="form-label" style="color: #A1C181;">Contraseña Actual</label>
-                    {{ password_form.old_password }}
+                <div class="mb-4">
+                    <label for="id_old_password" class="form-label" style="color: #C8D6C3; font-weight: bold;">
+                        Contraseña Actual
+                    </label>
+                    {{ password_form.old_password|add_class:"form-control text-light" }}
                 </div>
-                <div class="mb-3">
-                    <label for="id_new_password1" class="form-label" style="color: #A1C181;">Nueva Contraseña</label>
-                    {{ password_form.new_password1 }}
+                <div class="mb-4">
+                    <label for="id_new_password1" class="form-label" style="color: #C8D6C3; font-weight: bold;">
+                        Nueva Contraseña
+                    </label>
+                    {{ password_form.new_password1|add_class:"form-control text-light" }}
                 </div>
-                <div class="mb-3">
-                    <label for="id_new_password2" class="form-label" style="color: #A1C181;">Confirmar Nueva Contraseña</label>
-                    {{ password_form.new_password2 }}
+                <div class="mb-4">
+                    <label for="id_new_password2" class="form-label" style="color: #C8D6C3; font-weight: bold;">
+                        Confirmar Nueva Contraseña
+                    </label>
+                    {{ password_form.new_password2|add_class:"form-control text-light" }}
                 </div>
-                <button type="submit" name="cambiar_contraseña" class="btn btn-warning w-100 shadow-sm"
-                    style="font-weight: bold; font-size: 1.1rem;">Actualizar Contraseña</button>
+                <button type="submit" name="cambiar_contraseña" class="btn btn-success w-100 shadow-sm"
+                        style="font-weight: bold; font-size: 1.1rem; color: #fff; background-color: #28A745; border-color: #218838;">
+                    Actualizar Contraseña
+                </button>
             </form>
+            {% else %}
+                {% if request.user.is_staff %}
+                    <p><strong>RUT:</strong> {{ perfil_user.perfil.rut }}</p>
+                    <p><strong>Email:</strong> {{ perfil_user.email }}</p>
+                    <p><strong>Fecha de Registro:</strong> {{ perfil_user.date_joined }}</p>
+                    <p><strong>Último Inicio de Sesión:</strong> {{ perfil_user.last_login }}</p>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 </div>

@@ -177,11 +177,22 @@ def perfil(request):
 
 
     return render(request, 'core/perfil.html', {
-        'user': user,
+        'perfil_user': user,
         'imagen_form': imagen_form,
         'password_form': password_form,
     })
 
+def ver_perfil_usuario(request, username):
+    user = get_object_or_404(User, username=username)
+    perfil = user.perfil  # Relación con el modelo Perfil
+    imagen_form = ProfileUpdateForm(instance=perfil)
+    password_form = PasswordChangeForm(user=user)
+
+    return render(request, 'core/perfil.html', {
+        'perfil_user': user,
+        'imagen_form': imagen_form,
+        'password_form': password_form,
+    })
 
 #JUEGOS
 def biblioteca(request):
@@ -235,11 +246,18 @@ class SesionCreateView(CreateView):
     success_url = reverse_lazy('sesiones')
 
     def form_valid(self, form):
+        # Asignar el creador de la sesión
         form.instance.creador = self.request.user
+        # Asignar la capacidad máxima basada en el juego
         form.instance.capacidad_maxima = form.instance.juego.jugadores_max
 
         response = super().form_valid(form)
 
+        # Añadir automáticamente al creador como inscrito y participante
+        form.instance.usuarios_inscritos.add(self.request.user)
+        form.instance.usuarios_participantes.add(self.request.user)
+
+        # Procesar otros usuarios seleccionados
         usuarios_ids = self.request.POST.getlist('usuarios_inscritos')
         for user_id in usuarios_ids:
             user = User.objects.get(id=user_id)
@@ -305,7 +323,41 @@ class SesionDeleteView(DeleteView):
         messages.success(self.request, 'La sesión ha sido eliminada exitosamente.')
         return super().delete(request, *args, **kwargs)
 
+@login_required
+def confirmar_inicio_sesion(request, sesion_id):
+    sesion = get_object_or_404(Sesion, id=sesion_id, creador=request.user)
 
+    if sesion.estado != 'pendiente':
+        messages.error(request, "Solo puedes confirmar sesiones pendientes.")
+        return redirect('sesiones')
+
+    sesion.generar_codigo_secreto()
+    sesion.estado = 'en_curso'
+    sesion.save()
+
+    messages.success(request, f"Sesión confirmada. Código secreto: {sesion.codigo_secreto}")
+    return redirect('sesiones')
+
+@login_required
+def confirmar_asistencia(request, sesion_id):
+    sesion = get_object_or_404(Sesion, id=sesion_id)
+    print(sesion.codigo_secreto)
+    if request.user not in sesion.usuarios_inscritos.all():
+        messages.error(request, "No estás inscrito en esta sesión.")
+        return redirect('sesiones')
+
+    if request.method == 'POST':
+        codigo = request.POST.get('codigo_sesion')
+        print(codigo)
+        if sesion.verificar_codigo(codigo):
+            sesion.usuarios_participantes.add(request.user)
+            sesion.save()
+            messages.success(request, "Asistencia registrada con éxito.")
+        else:
+            messages.error(request, "Código incorrecto.")
+        return redirect('sesiones')
+
+    return render(request, 'core/sesiones.html')
 
 @login_required
 def anular_inscripcion_sesion(request, sesion_id):
