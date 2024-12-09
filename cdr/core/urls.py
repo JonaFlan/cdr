@@ -3,12 +3,12 @@ from django.shortcuts import render
 from .views import SesionCreateView, SesionUpdateView, SesionDeleteView
 from .views import JuegoDetailView, JuegoCreateView, JuegoUpdateView, JuegoDeleteView
 from .views import NoticiaDetailView, NoticiaCreateView, NoticiaUpdateView, NoticiaDeleteView
-from .views import gestor_prestamos, confirmar_retiro, confirmar_devolucion, cancelar_prestamo, confirmar_inicio_sesion, confirmar_asistencia
+from .views import gestor_prestamos, confirmar_retiro, confirmar_devolucion, cancelar_prestamo, confirmar_inicio_sesion, confirmar_asistencia, finalizar_sesion
 from .views import (
     index, biblioteca, perfil, sesiones, 
     inscribirse_sesion, anular_inscripcion_sesion, 
     noticias, dado, herramientas, mapas, 
-    manuales, hojapj, ver_manual_juego, confirmar_reserva, liberar_juegos_no_retirados,
+    manuales, hojapj, ver_manual_juego, confirmar_reserva, liberar_juegos_no_retirados, marcar_prestamos_atrasados,
     gestor_usuarios, crear_usuario, deshabilitar_usuario,seleccionar_imagen_perfil, habilitar_usuario, ver_perfil_usuario
 )
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path('sesiones/', sesiones, name='sesiones'),
     path('sesiones/crear/', SesionCreateView.as_view(), name='sesion_create'),
     path('sesiones/editar/<int:pk>/', SesionUpdateView.as_view(), name='sesion_update'),
+    path('sesion/finalizar/<int:sesion_id>/', finalizar_sesion, name='finalizar_sesion'),
     path('sesiones/eliminar/<int:pk>/', SesionDeleteView.as_view(), name='sesion_delete'),
     path('sesiones/anular_inscripcion/<int:sesion_id>/', anular_inscripcion_sesion, name='anular_inscripcion_sesion'),
     path('sesiones/iniciar/<int:sesion_id>/', confirmar_inicio_sesion, name='iniciar_sesion_juego'),
@@ -67,7 +68,8 @@ urlpatterns = [
     path('gestor_usuarios/habilitar/<int:user_id>/', habilitar_usuario, name='habilitar_usuario'),
 
     
-    path('test/', liberar_juegos_no_retirados, name='test')
+    path('test1/', liberar_juegos_no_retirados, name='test'),
+    path('test2/', marcar_prestamos_atrasados, name='test'),
 
 ]
 

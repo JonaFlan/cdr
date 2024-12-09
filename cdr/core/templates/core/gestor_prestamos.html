@@ -57,7 +57,7 @@
                     </td>
                     <td >{{ prestamo.juego.nombre }}</td>
                     <td >
-                        <span class="badge {% if prestamo.estado == 'RESERVADO' %}bg-warning{% elif prestamo.estado == 'PRESTADO' %}bg-success{% else %}bg-secondary{% endif %}">
+                        <span class="badge {% if prestamo.estado == 'RESERVADO' %}bg-warning{% elif prestamo.estado == 'PRESTADO' %}bg-success{% elif prestamo.estado == 'CANCELADO' %}bg-danger{% else %}bg-secondary{% endif %}">
                             {{ prestamo.get_estado_display }}
                         </span>
                     </td>

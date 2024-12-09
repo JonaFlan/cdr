@@ -50,7 +50,17 @@
             <tbody>
                 {% for usuario in usuarios %}
                 <tr>
-                    <td >{{ usuario.get_full_name }}</td>
+                    <td >                        
+                        <a href="{% url 'ver_perfil_usuario' username=usuario.username %}"
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="top" 
+                        data-bs-html="true"
+                        title="<strong>Email:</strong> {{ usuario.email }}<br>
+                               <strong>RUT:</strong> {{ usuario.perfil.rut|default:'No disponible' }}<br>
+                               <strong>Carrera:</strong> {{ usuario.perfil.carrera|default:'No especificada' }}">
+                        {{ usuario.get_full_name }}
+                        </a>
+                    </td>
                     <td>{{ usuario.email }}</td>
                     <td>
                         {% if usuario.is_active %}

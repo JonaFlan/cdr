@@ -103,10 +103,10 @@
                     {% endif %}
     
                     <!-- Detalles de la sesión -->
-                    <div class="sesion-card-body text-center">
+                    <div class="sesion-card-body">
                         <p class="sesion-card-text"><strong>Juego:</strong> {{ sesion.juego.nombre }}</p>
                         <p class="sesion-card-text"><strong>Fecha:</strong> {{ sesion.fecha }}</p>
-                        <p class="sesion-card-text">{{ sesion.descripcion }}</p>
+                        <p class="sesion-card-text"><strong>Lugar:</strong> {{ sesion.lugar }}</p>
                         <p class="sesion-card-text"><strong>Cupos disponibles:</strong> {{ sesion.cupos_disponibles }}</p>
                         {% if sesion.estado != "pendiente" %}
                         <p class="sesion-card-text"><strong>Estado:</strong> {{ sesion.get_estado_display }}</p>
@@ -136,18 +136,55 @@
     
                     <!-- Footer con botones de administración -->
                     {% if user.is_authenticated and sesion.creador == user %}
-                        <div class="card-footer d-flex justify-content-between" 
-                             style="background-color: #1A3B2A; color: #C8D6C3;">
-                            <a href="{% url 'sesion_update' sesion.id %}" class="btn btn-icon" title="Editar">
-                                <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
-                            </a>
-                            <button type="button" class="btn btn-icon" data-bs-toggle="modal" 
-                                    data-bs-target="#deleteModal" title="Eliminar"
-                                    data-id="{{ sesion.id }}" data-titulo="{{ sesion.titulo }}">
-                                <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
-                            </button>
-                        </div>
+                        {% if sesion.estado != 'finalizada' %}
+                            <div class="card-footer d-flex justify-content-between" 
+                                style="background-color: #1A3B2A; color: #C8D6C3;">
+                                {% if sesion.estado == 'en_curso' %}
+                                    <!-- Botón para finalizar sesión -->
+                                    <button type="button" class="btn btn-icon" data-bs-toggle="modal" 
+                                            data-bs-target="#finalizarModal{{ sesion.id }}" title="Finalizar sesión">
+                                        <i class="fas fa-check-circle" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                    </button>
+                                {% else %}
+                                    <!-- Botón para editar sesión -->
+                                    <a href="{% url 'sesion_update' sesion.id %}" class="btn btn-icon" title="Editar">
+                                        <i class="fas fa-edit" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                    </a>
+                                {% endif %}
+                                <!-- Botón para eliminar sesión -->
+                                <button type="button" class="btn btn-icon" data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal" title="Eliminar"
+                                        data-id="{{ sesion.id }}" data-titulo="{{ sesion.titulo }}">
+                                    <i class="fas fa-trash" style="font-size: 1.5rem; color: #A1C181;"></i>
+                                </button>
+                            </div>
+                        {% endif %}
                     {% endif %}
+
+                    <!-- Modal para finalizar sesiones -->
+                    <div class="modal fade" id="finalizarModal{{ sesion.id }}" tabindex="-1" aria-labelledby="finalizarModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content" style="background-color: #1A3B2A; color: #C8D6C3;">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="finalizarModalLabel">Finalizar Sesión</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Al finalizar esta sesión, las siguientes recompensas serán otorgadas:</p>
+                                    <ul>
+                                        <li><strong>Creador:</strong> 50 XP, 100 CDLC</li>
+                                        <li><strong>Participantes:</strong> 20 XP, 10 CDLC cada uno</li>
+                                    </ul>
+                                    <p>¿Estás seguro de que deseas finalizar esta sesión?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <a href="{% url 'finalizar_sesion' sesion.id %}" class="btn btn-success">Finalizar Sesión</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         {% endfor %}
@@ -203,6 +240,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     const deleteModal = document.getElementById('deleteModal');

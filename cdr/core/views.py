@@ -126,9 +126,11 @@ def admin_required(user):
     return user.is_staff
 
 # Create your views here.
+@login_required
 def hojapj(request):
     return render(request, 'core/hojapj.html')
 
+@login_required
 def manuales(request):
     return render(request, 'core/manuales.html')
 
@@ -136,9 +138,11 @@ def ver_manual_juego(request, juego_id):
     juego = get_object_or_404(Juego, id=juego_id)
     return render(request, 'core/manual.html', {'juego': juego})
 
+@login_required
 def mapas(request):
     return render(request, 'core/mapas.html')
 
+@login_required
 def dado(request):
     return render(request, 'core/dado.html')  # Ajuste para la ruta dentro de 'templates/core'
 
@@ -146,7 +150,7 @@ def index(request):
     print("Inicio")
     return render(request, 'core/index.html')
 
-
+@login_required
 def herramientas(request):
     return render(request, 'core/herramientas.html')
 
@@ -237,7 +241,9 @@ class JuegoDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 # SESIONES
 @login_required
 def sesiones(request):
-    sesiones = Sesion.objects.all()
+    sesiones = Sesion.objects.all().order_by('-fecha_publicacion')  # Orden descendente
+    for sesion in Sesion.objects.all():
+        print(f"ID: {sesion.id}, Estado: {sesion.estado}")
     return render(request, 'core/sesiones.html', {'sesiones': sesiones})
 
 class SesionCreateView(CreateView):
@@ -348,16 +354,31 @@ def confirmar_asistencia(request, sesion_id):
 
     if request.method == 'POST':
         codigo = request.POST.get('codigo_sesion')
-        print(codigo)
-        if sesion.verificar_codigo(codigo):
-            sesion.usuarios_participantes.add(request.user)
-            sesion.save()
-            messages.success(request, "Asistencia registrada con éxito.")
-        else:
-            messages.error(request, "Código incorrecto.")
+        if request.user not in sesion.usuarios_participantes.all():
+            if sesion.verificar_codigo(codigo):
+                sesion.usuarios_participantes.add(request.user)
+                sesion.save()
+                messages.success(request, "Asistencia registrada con éxito.")
+            else:
+                messages.error(request, "Código incorrecto.")
+
+        messages.success(request, "Ya estabas registrado")
         return redirect('sesiones')
 
     return render(request, 'core/sesiones.html')
+
+@login_required
+def finalizar_sesion(request, sesion_id):
+    sesion = get_object_or_404(Sesion, id=sesion_id, creador=request.user)
+    if sesion.estado == 'en_curso':
+
+        sesion.otorgar_recompensas()
+
+        messages.success(request, f"La sesión de '{sesion.juego.nombre}' ha sido finalizada con éxito.")
+    else:
+        messages.error(request, "La sesión no está en curso o ya ha sido finalizada.")
+
+    return redirect('sesiones')
 
 @login_required
 def anular_inscripcion_sesion(request, sesion_id):
@@ -565,7 +586,7 @@ def liberar_juegos_no_retirados(request):
     # Filtrar préstamos con fecha_reserva antes de hoy
     reservas_vencidas = Prestamo.objects.filter(
         estado='RESERVADO',
-        fecha_reserva__date__lt=hoy  # Menores a hoy (incluye ayer y anteriores)
+        fecha_solicitud__date__lt=hoy  # Menores a hoy (incluye ayer y anteriores)
     )
     for prestamo in reservas_vencidas:
         prestamo.juego.estado = 'DISPONIBLE'
@@ -573,6 +594,23 @@ def liberar_juegos_no_retirados(request):
         prestamo.estado = 'CANCELADO'
         prestamo.save()
         print(f"Juego liberado: {prestamo.juego.nombre} (ID: {prestamo.juego.id})")
+        
+    return redirect('biblioteca')
+
+def marcar_prestamos_atrasados(request):
+    """Marca los préstamos que tienen más de 3 días en estado 'PRESTADO' como atrasados."""
+    hoy = localtime(now()).date()
+
+    # Filtrar préstamos en estado 'PRESTADO' con fecha de préstamo más de 3 días antes de hoy
+    prestamos_atrasados = Prestamo.objects.filter(
+        estado='PRESTADO',
+        fecha_solicitud__date__lt=hoy - timedelta(days=3)  # Más de 3 días atrás
+    )
+    
+    for prestamo in prestamos_atrasados:
+        prestamo.atrasado = True  # Marcar como atrasado
+        prestamo.save()
+        print(f"Préstamo atrasado: {prestamo.juego.nombre} (ID: {prestamo.juego.id})")
         
     return redirect('biblioteca')
 

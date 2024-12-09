@@ -2,27 +2,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">  
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'img/cdr3.png' %}" type="image/x-icon"/>
     <title>{% block title %} {% endblock %} - Cripta del Rol</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/generico.css' %}">
-    
+    <style>
+        /* Configuración básica */
+        html, body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #principal {
+            flex: 1;
+            padding-bottom: 2rem; /* Espacio para evitar que el contenido tape el footer */
+        }
+
+        footer {
+            background-color: #06130A; /* Fondo que combina con el diseño */
+            color: #A1C181;
+            text-align: center;
+            padding: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: #A1C181;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        footer .fa-instagram {
+            font-size: 1.2rem;
+        }
+    </style>
 
     {% block custom %}
-    
     {% endblock %}
 </head>
 <body>
     <div class="container" id="principal">
         <nav class="navbar navbar-expand-lg navbar-dark bg-transparent">
             <div class="container-fluid">
-              <button id="navbar-toggler " class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">             
+              <button id="navbar-toggler" class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">             
                 <a class="navbar-brand d-lg-none mx-auto" href="{% url 'index' %}">
                   <img src="{% static 'img/cdr2.png' %}" alt="Logo" height="50">
                 </a>
@@ -40,9 +75,6 @@
                     <a class="nav-link" href="{% url 'biblioteca' %}">Biblioteca</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'herramientas' %}">Herramientas</a>
-                  </li>
-                  <li class="nav-item">
                     <a class="nav-link" href="{% url 'noticias' %}">Noticias</a>
                   </li>
                   {% if not user.is_authenticated %}
@@ -50,33 +82,26 @@
                           <a class="nav-link" href="{% url 'login' %}">Iniciar sesión</a>
                       </li>
                   {% else %}
+                    <li class="nav-item">
+                      <a class="nav-link" href="{% url 'herramientas' %}">Herramientas</a>
+                    </li>
                       <li class="nav-item">
                           <a class="nav-link" href="{% url 'sesiones' %}">Sesiones</a>
                       </li>
                       <li class="nav-item dropdown ps-lg-3 d-flex align-items-center">
                           <a class="nav-link dropdown-toggle p-0" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              <!-- Nombre del usuario y su icono -->
                               <span class="me-2 align-middle">{{ user.username }}</span>
                               <img src="{% static user.perfil.imagen %}" alt="Perfil" class="rounded-circle" height="30" width="30">
                           </a>
                           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                               <li><a class="dropdown-item" href="{% url 'perfil' %}">Mi perfil</a></li>
-                  
-                              <!-- Mis préstamos: solo para usuarios normales -->
                               {% if not user.is_staff %}
                                   <li><a class="dropdown-item" href="{% url 'gestor_prestamos' %}">Mis préstamos</a></li>
                               {% endif %}
-                  
-                              <!-- Gestor de préstamos: solo para administradores -->
                               {% if user.is_staff %}
                                   <li><a class="dropdown-item" href="{% url 'gestor_prestamos' %}">Gestor de préstamos</a></li>
-                              {% endif %}
-
-                              <!-- Gestor de Usuarios: solo para administradores -->
-                              {% if user.is_staff %}
                                   <li><a class="dropdown-item" href="{% url 'gestor_usuarios' %}">Gestor de usuarios</a></li>
                               {% endif %}
-                  
                               <li>
                                   <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
                                       {% csrf_token %}
@@ -93,10 +118,18 @@
     </div>
 
     {% block content %}
-    
     {% endblock %}
 
-
+    <!-- Footer -->
+    <footer>
+        <p class="my-0">
+            Síguenos en
+        </p>
+        <a href="https://www.instagram.com/cripta_del_rol/" target="_blank" rel="noopener noreferrer">
+          <i class="fab fa-instagram"></i> La Cripta Del Rol
+        </a>
+        <p>&copy; 2024 Cripta del Rol. Todos los derechos reservados.</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>

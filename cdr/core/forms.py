@@ -32,13 +32,14 @@ class ProfileUpdateForm(forms.ModelForm):
 class SesionForm(forms.ModelForm):
     class Meta:
         model = Sesion
-        fields = ['juego', 'fecha', 'capacidad_maxima', 'usuarios_inscritos']
+        fields = ['juego', 'fecha', 'lugar', 'capacidad_maxima', 'usuarios_inscritos']
         widgets = {
             'juego': forms.Select(attrs={'class': 'form-control bg-dark text-light border-secondary'}),
             'fecha': forms.DateTimeInput(attrs={
                 'type': 'datetime-local',
                 'class': 'form-control bg-dark text-light border-secondary'
             }),
+            'lugar': forms.TextInput(attrs={'class': 'form-control bg-dark text-light border-secondary'}), 
             'capacidad_maxima': forms.NumberInput(attrs={'class': 'form-control bg-dark text-light border-secondary'}),
             'usuarios_inscritos': forms.SelectMultiple(attrs={'class': 'form-control bg-dark text-light border-secondary'}),
         }

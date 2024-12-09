@@ -104,6 +104,8 @@ class Sesion(models.Model):
 
     juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
     fecha = models.DateTimeField()
+    lugar = models.CharField(max_length=100, null=True)
+    fecha_publicacion = models.DateTimeField(auto_now_add=True, null=True)
     capacidad_maxima = models.PositiveIntegerField()
     usuarios_inscritos = models.ManyToManyField(User, related_name='sesiones_inscritas', blank=True)
     usuarios_participantes = models.ManyToManyField(User, related_name='sesiones_participadas', blank=True)
@@ -139,7 +141,7 @@ class Sesion(models.Model):
         self.creador.perfil.agregar_recompensas(xp=self.xp_creador, cdlc=self.cdlc_creador)
         
         # Recompensas para los participantes
-        for usuario in self.usuarios_participantes.all():
+        for usuario in self.usuarios_participantes.exclude(id=self.creador.id):
             usuario.perfil.agregar_recompensas(xp=self.xp_participante, cdlc=self.cdlc_participante)
 
         # Cambiar el estado a finalizada
